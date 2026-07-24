@@ -104,6 +104,37 @@ body::before {
 }
 .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(255,107,53,0.4); }
 
+.nav-toggle {
+  display: none; width: 42px; height: 42px; flex-shrink: 0;
+  border: 1px solid var(--card-line); border-radius: 10px; background: transparent;
+  align-items: center; justify-content: center; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 0;
+}
+.nav-toggle span { display: block; width: 18px; height: 2px; background: var(--ink); border-radius: 2px; transition: transform 220ms ease, opacity 220ms ease; }
+.nav.menu-open .nav-toggle { border-color: var(--accent); }
+.nav.menu-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav.menu-open .nav-toggle span:nth-child(2) { opacity: 0; }
+.nav.menu-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none; flex-direction: column;
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height 320ms ease, opacity 260ms ease;
+  border-top: 1px solid transparent;
+}
+.nav.menu-open .mobile-menu { max-height: 340px; opacity: 1; border-top-color: var(--line); }
+.mobile-menu a {
+  padding: 16px 24px; text-decoration: none; color: var(--muted);
+  font-size: 0.98rem; font-weight: 600; border-bottom: 1px solid var(--line);
+  transition: color 150ms ease, background 150ms ease;
+}
+.mobile-menu a:active { background: rgba(255,255,255,0.03); }
+.mobile-menu-cta {
+  color: var(--accent) !important; font-weight: 800 !important;
+  text-transform: uppercase; letter-spacing: 0.03em; font-size: 0.85rem !important;
+}
+@media (prefers-reduced-motion: reduce) { .mobile-menu { transition: none; } .nav-toggle span { transition: none; } }
+
 /* ---------- Marquee ---------- */
 .marquee { border-bottom: 1px solid var(--line); background: var(--bg-alt); overflow: hidden; }
 .marquee-track { display: flex; width: max-content; gap: 0; animation: marquee 32s linear infinite; }
@@ -313,6 +344,16 @@ body::before {
 .scroll-btn svg { width: 18px; height: 18px; }
 @media (max-width: 700px) { .scroll-nav { display: none; } }
 
+.scroll-hint {
+  display: none; align-items: center; gap: 8px; justify-content: center;
+  color: var(--muted-2); font-size: 0.78rem; font-weight: 600;
+  margin-top: 2px; letter-spacing: 0.02em;
+}
+.scroll-hint svg { width: 15px; height: 15px; animation: hint-slide 1.6s ease-in-out infinite; }
+@keyframes hint-slide { 0%, 100% { transform: translateX(0); opacity: 0.6; } 50% { transform: translateX(5px); opacity: 1; } }
+@media (max-width: 700px) { .scroll-hint { display: flex; } }
+@media (prefers-reduced-motion: reduce) { .scroll-hint svg { animation: none; } }
+
 /* ---------- Why us ---------- */
 .why { padding: 100px 0; border-top: 1px solid var(--line); }
 .why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 8px; }
@@ -358,20 +399,38 @@ body::before {
 /* ---------- Responsive ---------- */
 @media (max-width: 900px) {
   .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .nav-toggle { display: flex; }
+  .mobile-menu { display: flex; }
   .hero-grid { grid-template-columns: 1fr; gap: 44px; }
   .contrast-grid { grid-template-columns: 1fr; }
-  .why-grid { grid-template-columns: repeat(2, 1fr); }
-  .steps { grid-template-columns: 1fr; gap: 32px; }
+  .why-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .why-card {
+    padding: 22px 20px;
+    background: linear-gradient(180deg, var(--card-hi), var(--card));
+    border: 1px solid var(--card-line); border-radius: 16px;
+  }
+  .steps { grid-template-columns: 1fr; gap: 16px; }
+  .step {
+    padding: 24px 22px;
+    border-top: none;
+    background: linear-gradient(180deg, var(--card-hi), var(--card));
+    border: 1px solid var(--card-line); border-radius: 16px;
+  }
   .stat-row { max-width: 100%; }
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 560px) {
-  .hero { padding: 44px 0 32px; }
-  .contrast, .services, .why, .process { padding: 68px 0; }
-  .final-cta { padding: 84px 0; }
+  .hero { padding: 40px 0 32px; }
+  .contrast, .services, .why, .process { padding: 60px 0; }
+  .final-cta { padding: 76px 0; }
   .stat-row { grid-template-columns: 1fr; }
   .final-checklist { flex-direction: column; align-items: flex-start; gap: 14px; }
   .service-card { flex-basis: 258px; }
+  .why-grid { grid-template-columns: 1fr; }
+  .contrast-col { padding: 26px 22px; }
+  .services-head-row { gap: 18px; }
+  .services-head-row .ghost-btn { width: 100%; text-align: center; }
 }
 </style>
 
@@ -384,6 +443,15 @@ body::before {
       <li><a href="#como-funciona">Cómo funciona</a></li>
     </ul>
     <a class="nav-cta" href="https://calendar.app.google/zKUp8LvVAKHzRGVF8" target="_blank" rel="noopener">Agendar reunión</a>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#problema">El problema</a>
+    <a href="#servicios">Servicios</a>
+    <a href="#como-funciona">Cómo funciona</a>
+    <a class="mobile-menu-cta" href="https://calendar.app.google/zKUp8LvVAKHzRGVF8" target="_blank" rel="noopener">Agendar reunión</a>
   </div>
 </nav>
 
@@ -543,6 +611,7 @@ body::before {
       <button class="scroll-btn prev" type="button" aria-label="Ver servicios anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
       <button class="scroll-btn next" type="button" aria-label="Ver más servicios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
     </div>
+    <p class="scroll-hint">Desliza para ver los demás servicios<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
   </div>
 </section>
 
@@ -684,6 +753,22 @@ body::before {
 
 <script>
 (function () {
+  var navEl = document.querySelector('.nav');
+  var navToggle = document.getElementById('navToggle');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (navEl && navToggle && mobileMenu) {
+    navToggle.addEventListener('click', function () {
+      var open = navEl.classList.toggle('menu-open');
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        navEl.classList.remove('menu-open');
+        navToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
   var track = document.querySelector('.services-scroll');
   var prev = document.querySelector('.scroll-btn.prev');
   var next = document.querySelector('.scroll-btn.next');
