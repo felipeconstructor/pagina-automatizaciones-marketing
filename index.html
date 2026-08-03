@@ -408,7 +408,11 @@ body::before {
 .why { padding: 100px 0; border-top: 1px solid var(--line); }
 .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 8px; }
 .team-card { padding: 30px; border: 1px solid var(--card-line); border-radius: 18px; background: linear-gradient(180deg, var(--card-hi), var(--card)); }
-.team-avatar { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; margin-bottom: 18px; }
+.team-icon { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink); margin-bottom: 20px; }
+.team-icon svg { width: 24px; height: 24px; }
+.team-stat { display: flex; align-items: baseline; gap: 12px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+.team-stat-num { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-variation-settings: "opsz" 40; color: var(--accent); font-size: 1.8rem; letter-spacing: 0.01em; white-space: nowrap; }
+.team-stat-label { color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
 .team-name { font-weight: 800; font-size: 1.12rem; margin-bottom: 4px; }
 .team-role { color: var(--accent); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
 .team-bio { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
@@ -759,16 +763,18 @@ body::before {
     </div>
     <div class="team-grid">
       <div class="team-card reveal" style="transition-delay:0ms">
-        <span class="team-avatar">RM</span>
+        <span class="team-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 001 1h2l4 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg></span>
+        <div class="team-stat"><span class="team-stat-num">3 años</span><span class="team-stat-label">vendiendo productos y servicios online en rubros muy distintos</span></div>
         <div class="team-name">Rodolfo Mena</div>
         <div class="team-role">Marketing &amp; Automatización con IA</div>
-        <p class="team-bio">Se especializa en marketing digital y en diseñar los sistemas de inteligencia artificial que hoy atienden, califican y agendan por negocios que no quieren depender de más personal para vender más. Detrás de cada campaña y cada automatización hay un solo objetivo: bajar el costo de cada cliente nuevo.</p>
+        <p class="team-bio">Antes de dedicarse a la automatización pasó tres años vendiendo online en rubros muy distintos — de ahí aprendió que el problema casi nunca es el tráfico, sino lo que pasa después del clic. Hoy diseña los sistemas de marketing e IA que resuelven justamente eso.</p>
       </div>
       <div class="team-card reveal" style="transition-delay:120ms">
-        <span class="team-avatar">FC</span>
+        <span class="team-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-6h6v6"/></svg></span>
+        <div class="team-stat"><span class="team-stat-num">90%</span><span class="team-stat-label">de su propia corredora, automatizado con IA</span></div>
         <div class="team-name">Felipe Campos</div>
         <div class="team-role">Operaciones &amp; Automatización</div>
-        <p class="team-bio">Corredor de profesión. Automatizó el 90% de los procesos de su propia corredora — cotizaciones, seguimiento de clientes y gestión documental — y al ver los resultados en su propio negocio, decidió dedicarse a implementar esos mismos sistemas en otras empresas.</p>
+        <p class="team-bio">Corredor de propiedades de profesión. Automatizó el 90% de los procesos de su corredora con IA — cotizaciones, seguimiento y gestión documental — y con eso se ahorró el sueldo de dos personas. Hoy su parte es mostrar propiedades y firmar al cobrar la comisión: el sistema hace el resto.</p>
       </div>
     </div>
   </div>
