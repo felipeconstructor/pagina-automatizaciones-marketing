@@ -327,6 +327,40 @@ body::before {
 .visual-rag { background: conic-gradient(from 180deg at 50% 50%, rgba(255,107,53,0.28), transparent 40%, rgba(255,176,32,0.22), transparent 80%), var(--card); color: var(--accent); }
 .visual-cta { background: linear-gradient(160deg, rgba(255,107,53,0.4), rgba(255,176,32,0.15) 60%, var(--card)); color: var(--accent-ink); }
 
+/* ---------- Card visual mockups ---------- */
+.mock { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 18px 20px; position: relative; z-index: 1; font-size: 11px; line-height: 1.4; }
+.mock-bubble { max-width: 82%; padding: 7px 11px; border-radius: 12px; font-size: 11px; }
+.mock-bubble-user { align-self: flex-end; background: rgba(255,255,255,0.1); color: var(--ink); border-bottom-right-radius: 4px; }
+.mock-bubble-ai { align-self: flex-start; background: var(--accent); color: var(--accent-ink); font-weight: 600; border-bottom-left-radius: 4px; }
+.mock-dots { display: flex; gap: 4px; align-self: flex-start; padding: 8px 12px; background: rgba(255,255,255,0.1); border-radius: 12px; border-bottom-left-radius: 4px; }
+.mock-dots span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); opacity: 0.7; }
+
+.mock-chart { align-items: flex-start; }
+.mock-bars { display: flex; align-items: flex-end; gap: 6px; height: 58px; }
+.mock-bars span { width: 11px; border-radius: 3px 3px 0 0; background: linear-gradient(180deg, var(--accent-2), var(--accent)); display: block; }
+.mock-chart-tag { font-size: 10px; font-weight: 800; color: var(--accent); background: rgba(255,107,53,0.16); padding: 4px 10px; border-radius: 999px; letter-spacing: 0.02em; }
+
+.mock-browser { padding: 0; gap: 0; }
+.mock-browser-bar { display: flex; gap: 4px; padding: 10px 12px; background: rgba(0,0,0,0.2); }
+.mock-browser-bar span { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.25); }
+.mock-browser-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 9px; }
+.mock-line { height: 7px; border-radius: 4px; background: rgba(255,255,255,0.16); }
+.mock-line.w70 { width: 70%; }
+.mock-line.w45 { width: 45%; }
+.mock-browser-btn { margin-top: 5px; align-self: flex-start; font-size: 10px; font-weight: 800; color: var(--accent-ink); background: linear-gradient(135deg, var(--accent-2), var(--accent)); padding: 6px 13px; border-radius: 999px; }
+
+.mock-rag { align-items: center; }
+.mock-docs { display: flex; gap: 5px; }
+.mock-docs span { width: 20px; height: 26px; border-radius: 3px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.18); }
+.mock-arrow { width: 16px; height: 16px; color: var(--accent); opacity: 1; }
+.mock-answer { font-size: 10.5px; font-style: italic; color: var(--ink); background: rgba(255,255,255,0.09); padding: 6px 11px; border-radius: 10px; text-align: center; }
+
+.mock-cal { align-items: center; }
+.mock-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.mock-cal-grid span { width: 15px; height: 15px; border-radius: 4px; background: rgba(0,0,0,0.18); }
+.mock-cal-grid span.active { background: rgba(20,10,3,0.85); color: var(--accent-2); display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; }
+.mock-cal-time { font-size: 10.5px; font-weight: 700; color: var(--accent-ink); background: rgba(20,10,3,0.55); padding: 4px 11px; border-radius: 999px; }
+
 .card-body { padding: 22px 22px 24px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
 .card-title { font-weight: 800; font-size: 1.08rem; letter-spacing: -0.005em; }
 .card-desc { color: var(--muted); font-size: 0.87rem; line-height: 1.58; flex: 1; }
@@ -360,22 +394,14 @@ body::before {
 @media (max-width: 700px) { .scroll-hint { display: flex; } }
 @media (prefers-reduced-motion: reduce) { .scroll-hint svg { animation: none; } }
 
-/* ---------- Why us ---------- */
+/* ---------- Quiénes somos ---------- */
 .why { padding: 100px 0; border-top: 1px solid var(--line); }
-.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 8px; }
-.why-card { padding: 4px; }
-.why-icon { width: 46px; height: 46px; border-radius: 12px; margin-bottom: 20px; background: rgba(255,107,53,0.13); color: var(--accent); display: flex; align-items: center; justify-content: center; }
-.why-icon svg { width: 22px; height: 22px; }
-.why-title { font-weight: 800; font-size: 1.02rem; margin-bottom: 9px; }
-.why-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
-
-/* ---------- Process ---------- */
-.process { padding: 100px 0; border-top: 1px solid var(--line); background: var(--bg-alt); }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 12px; position: relative; }
-.step { position: relative; padding-top: 30px; border-top: 2px solid var(--card-line); }
-.step-no { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-variation-settings: "opsz" 30; color: var(--accent); font-size: 1.7rem; font-variant-numeric: tabular-nums; display: block; margin-bottom: 16px; }
-.step-title { font-weight: 800; font-size: 1.12rem; margin-bottom: 9px; }
-.step-desc { color: var(--muted); font-size: 0.93rem; line-height: 1.55; }
+.team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 8px; }
+.team-card { padding: 30px; border: 1px solid var(--card-line); border-radius: 18px; background: linear-gradient(180deg, var(--card-hi), var(--card)); }
+.team-avatar { display: flex; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink); font-weight: 800; font-size: 0.95rem; letter-spacing: 0.02em; margin-bottom: 18px; }
+.team-name { font-weight: 800; font-size: 1.12rem; margin-bottom: 4px; }
+.team-role { color: var(--accent); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 14px; }
+.team-bio { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
 
 /* ---------- Final CTA ---------- */
 .final-cta { position: relative; padding: 120px 0; text-align: center; overflow: hidden; border-top: 1px solid var(--line); }
@@ -410,30 +436,17 @@ body::before {
   .mobile-menu { display: flex; }
   .hero-grid { grid-template-columns: 1fr; gap: 44px; }
   .contrast-grid { grid-template-columns: 1fr; }
-  .why-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .why-card {
-    padding: 22px 20px;
-    background: linear-gradient(180deg, var(--card-hi), var(--card));
-    border: 1px solid var(--card-line); border-radius: 16px;
-  }
-  .steps { grid-template-columns: 1fr; gap: 16px; }
-  .step {
-    padding: 24px 22px;
-    border-top: none;
-    background: linear-gradient(180deg, var(--card-hi), var(--card));
-    border: 1px solid var(--card-line); border-radius: 16px;
-  }
   .stat-row { max-width: 100%; }
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 560px) {
   .hero { padding: 40px 0 32px; }
-  .contrast, .services, .why, .process { padding: 60px 0; }
+  .contrast, .services, .why { padding: 60px 0; }
   .final-cta { padding: 76px 0; }
   .stat-row { grid-template-columns: 1fr; }
   .final-checklist { flex-direction: column; align-items: flex-start; gap: 14px; }
   .service-card { flex-basis: 258px; }
-  .why-grid { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
   .contrast-col { padding: 26px 22px; }
   .services-head-row { gap: 18px; }
   .services-head-row .ghost-btn { width: 100%; text-align: center; }
@@ -490,7 +503,7 @@ body::before {
     <ul class="nav-links">
       <li><a href="#problema">El problema</a></li>
       <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#como-funciona">Cómo funciona</a></li>
+      <li><a href="#quienes-somos">Quiénes somos</a></li>
     </ul>
     <a class="nav-cta" href="https://calendar.app.google/zKUp8LvVAKHzRGVF8" target="_blank" rel="noopener">Agendar reunión</a>
     <button class="nav-toggle" id="navToggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobileMenu">
@@ -500,7 +513,7 @@ body::before {
   <div class="mobile-menu" id="mobileMenu">
     <a href="#problema">El problema</a>
     <a href="#servicios">Servicios</a>
-    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#quienes-somos">Quiénes somos</a>
     <a class="mobile-menu-cta" href="https://calendar.app.google/zKUp8LvVAKHzRGVF8" target="_blank" rel="noopener">Agendar reunión</a>
   </div>
 </nav>
@@ -572,7 +585,10 @@ body::before {
         <div class="service-card reveal" style="transition-delay:0ms">
           <div class="card-visual visual-copiloto">
             <span class="card-badge">Automatización IA</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+            <div class="mock">
+              <div class="mock-bubble mock-bubble-user">¿Cuál es el stock del producto X?</div>
+              <div class="mock-bubble mock-bubble-ai">Quedan 14 unidades en bodega central.</div>
+            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Copiloto empresarial</div>
@@ -587,7 +603,10 @@ body::before {
         <div class="service-card reveal" style="transition-delay:60ms">
           <div class="card-visual visual-chatbot">
             <span class="card-badge">Atención al cliente</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+            <div class="mock">
+              <div class="mock-bubble mock-bubble-ai">¡Hola! ¿En qué te ayudo? 👋</div>
+              <div class="mock-dots"><span></span><span></span><span></span></div>
+            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Chatbot de atención 24/7</div>
@@ -602,7 +621,10 @@ body::before {
         <div class="service-card reveal" style="transition-delay:120ms">
           <div class="card-visual visual-ads">
             <span class="card-badge">Marketing</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 001 1h2l4 4V6L6 10H4a1 1 0 00-1 1z"/><path d="M16 8a5 5 0 010 8"/><path d="M19 5a9 9 0 010 14"/></svg>
+            <div class="mock mock-chart">
+              <div class="mock-bars"><span style="height:32%"></span><span style="height:52%"></span><span style="height:44%"></span><span style="height:70%"></span><span style="height:96%"></span></div>
+              <div class="mock-chart-tag">Costo por reunión −38%</div>
+            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Marketing con IA (Meta Ads)</div>
@@ -617,7 +639,14 @@ body::before {
         <div class="service-card reveal" style="transition-delay:180ms">
           <div class="card-visual visual-landing">
             <span class="card-badge">Diseño y conversión</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><circle cx="6.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
+            <div class="mock mock-browser">
+              <div class="mock-browser-bar"><span></span><span></span><span></span></div>
+              <div class="mock-browser-body">
+                <div class="mock-line w70"></div>
+                <div class="mock-line w45"></div>
+                <div class="mock-browser-btn">Agendar reunión</div>
+              </div>
+            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Landing pages</div>
@@ -632,7 +661,11 @@ body::before {
         <div class="service-card reveal" style="transition-delay:240ms">
           <div class="card-visual visual-rag">
             <span class="card-badge">Automatización IA</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/></svg>
+            <div class="mock mock-rag">
+              <div class="mock-docs"><span></span><span></span><span></span></div>
+              <svg class="mock-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              <div class="mock-answer">"Tu política de envío es…"</div>
+            </div>
           </div>
           <div class="card-body">
             <div class="card-title">RAG de datos</div>
@@ -646,7 +679,10 @@ body::before {
 
         <a class="service-card cta-service reveal" href="https://calendar.app.google/zKUp8LvVAKHzRGVF8" target="_blank" rel="noopener" style="transition-delay:300ms">
           <div class="card-visual visual-cta">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <div class="mock mock-cal">
+              <div class="mock-cal-grid"><span></span><span></span><span></span><span></span><span class="active">10</span><span></span><span></span></div>
+              <div class="mock-cal-time">10:00 AM disponible</div>
+            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Cotiza con nosotros</div>
@@ -701,58 +737,25 @@ body::before {
   </div>
 </section>
 
-<section class="why">
+<section class="why" id="quienes-somos">
   <div class="container">
     <div class="section-head section-head-block reveal">
-      <span class="eyebrow">Por qué nosotros</span>
-      <h2 class="section-title">Un socio técnico, no un proveedor más</h2>
+      <span class="eyebrow">Quiénes somos</span>
+      <h2 class="section-title">Un especialista en growth y un operador que ya vivió el problema</h2>
+      <p class="section-desc">Automatiza.IA no es una agencia con un equipo genérico detrás. Somos dos personas que construyen cada sistema con las manos — y que lo probaron primero en carne propia.</p>
     </div>
-    <div class="why-grid">
-      <div class="why-card reveal" style="transition-delay:0ms">
-        <span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></span>
-        <div class="why-title">Implementación rápida</div>
-        <p class="why-desc">Tu primer sistema funcionando en días, no en meses de reuniones.</p>
+    <div class="team-grid">
+      <div class="team-card reveal" style="transition-delay:0ms">
+        <span class="team-avatar">RM</span>
+        <div class="team-name">Rodolfo Mena</div>
+        <div class="team-role">Marketing &amp; Automatización con IA</div>
+        <p class="team-bio">Se especializa en marketing digital y en diseñar los sistemas de inteligencia artificial que hoy atienden, califican y agendan por negocios que no quieren depender de más personal para vender más. Detrás de cada campaña y cada automatización hay un solo objetivo: bajar el costo de cada cliente nuevo.</p>
       </div>
-      <div class="why-card reveal" style="transition-delay:60ms">
-        <span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 10-3.2 6.4M20 4v6h-6"/></svg></span>
-        <div class="why-title">Sin contratos eternos</div>
-        <p class="why-desc">Partimos con un piloto acotado. Si funciona, escalamos juntos.</p>
-      </div>
-      <div class="why-card reveal" style="transition-delay:120ms">
-        <span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="1"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2 2M17.1 17.1l2 2M19.1 4.9l-2 2M6.9 17.1l-2 2"/></svg></span>
-        <div class="why-title">Tecnología de punta</div>
-        <p class="why-desc">Los mismos modelos de IA que usan las empresas grandes, adaptados a tu operación.</p>
-      </div>
-      <div class="why-card reveal" style="transition-delay:180ms">
-        <span class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1118 0v5a2 2 0 01-2 2h-1v-7h3M3 12h3v7H5a2 2 0 01-2-2v-5z"/></svg></span>
-        <div class="why-title">Soporte directo</div>
-        <p class="why-desc">Hablas con quien construyó tu sistema, no con un ticket sin respuesta.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="process" id="como-funciona">
-  <div class="container">
-    <div class="section-head section-head-block reveal">
-      <span class="eyebrow">Cómo funciona</span>
-      <h2 class="section-title">De aquí a tu negocio automatizado</h2>
-    </div>
-    <div class="steps">
-      <div class="step reveal" style="transition-delay:0ms">
-        <span class="step-no">01</span>
-        <div class="step-title">Ves el anuncio y entras aquí</div>
-        <p class="step-desc">Estás viendo justo eso: el primer paso. Sin formularios largos ni preguntas de más.</p>
-      </div>
-      <div class="step reveal" style="transition-delay:100ms">
-        <span class="step-no">02</span>
-        <div class="step-title">Agendas una reunión gratuita</div>
-        <p class="step-desc">20 minutos por videollamada. Revisamos tu negocio y dónde te está quitando más tiempo.</p>
-      </div>
-      <div class="step reveal" style="transition-delay:200ms">
-        <span class="step-no">03</span>
-        <div class="step-title">Cotizamos y automatizamos</div>
-        <p class="step-desc">Te mostramos la propuesta y, si calza, dejamos el sistema funcionando en tu negocio.</p>
+      <div class="team-card reveal" style="transition-delay:120ms">
+        <span class="team-avatar">FC</span>
+        <div class="team-name">Felipe Campos</div>
+        <div class="team-role">Operaciones &amp; Automatización</div>
+        <p class="team-bio">Corredor de profesión. Automatizó el 90% de los procesos de su propia corredora — cotizaciones, seguimiento de clientes y gestión documental — y al ver los resultados en su propio negocio, decidió dedicarse a implementar esos mismos sistemas en otras empresas.</p>
       </div>
     </div>
   </div>
@@ -790,7 +793,7 @@ body::before {
       <div class="footer-col">
         <div class="footer-col-title">Empresa</div>
         <a href="#problema">El problema</a>
-        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#quienes-somos">Quiénes somos</a>
         <a href="https://calendar.app.google/zKUp8LvVAKHzRGVF8" target="_blank" rel="noopener">Agendar reunión</a>
       </div>
     </div>
