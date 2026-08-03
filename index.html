@@ -438,6 +438,48 @@ body::before {
   .services-head-row { gap: 18px; }
   .services-head-row .ghost-btn { width: 100%; text-align: center; }
 }
+
+/* ---------- Qualify modal ---------- */
+.qualify-overlay { position: fixed; inset: 0; background: rgba(6,5,4,0.75); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 999; }
+.qualify-overlay[hidden] { display: none; }
+.qualify-modal { position: relative; width: 100%; max-width: 480px; background: linear-gradient(180deg, var(--card-hi), var(--card)); border: 1px solid var(--card-line); border-radius: 24px; padding: 36px 32px 32px; box-shadow: 0 40px 90px rgba(0,0,0,0.55); animation: qualify-pop 220ms ease; max-height: 90vh; overflow-y: auto; }
+@keyframes qualify-pop { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+.qualify-close { position: absolute; top: 18px; right: 18px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--card-line); background: transparent; color: var(--muted); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: border-color 0.2s ease, color 0.2s ease; }
+.qualify-close:hover { border-color: var(--accent); color: var(--ink); }
+
+.qualify-progress { margin-bottom: 24px; padding-right: 40px; }
+.qualify-progress-track { height: 5px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.qualify-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius: 999px; transition: width 250ms ease; }
+.qualify-progress-label { display: block; color: var(--muted-2); font-size: 0.74rem; margin-top: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.qualify-question { font-family: "Fraunces", Georgia, serif; font-weight: 560; font-variation-settings: "opsz" 40, "WONK" 1; font-size: 1.35rem; line-height: 1.25; margin-bottom: 22px; }
+.qualify-subtext { color: var(--muted); font-size: 0.9rem; line-height: 1.5; margin: -12px 0 22px; }
+
+.qualify-options { display: flex; flex-direction: column; gap: 10px; }
+.qualify-option { display: flex; align-items: center; gap: 14px; text-align: left; width: 100%; border: 1px solid var(--card-line); background: var(--bg-alt); border-radius: 14px; padding: 14px 16px; cursor: pointer; color: var(--ink); font-size: 0.92rem; font-family: inherit; transition: border-color 0.2s ease, background 0.2s ease; }
+.qualify-option:hover { border-color: var(--accent); }
+.qualify-option.is-selected { border-color: var(--accent); background: rgba(255,107,53,0.1); }
+.qualify-option-letter { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--line); color: var(--muted); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.8rem; transition: background 0.2s ease, color 0.2s ease; }
+.qualify-option.is-selected .qualify-option-letter { background: var(--accent); color: var(--accent-ink); }
+
+.qualify-label { display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 18px; }
+.qualify-input { font-family: "Public Sans", sans-serif; font-size: 0.95rem; font-weight: 500; text-transform: none; letter-spacing: normal; color: var(--ink); background: var(--bg-alt); border: 1px solid var(--card-line); border-radius: 12px; padding: 13px 16px; }
+.qualify-input:focus { outline: none; border-color: var(--accent); }
+
+.qualify-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 28px; }
+.qualify-nav[hidden] { display: none; }
+.qualify-nav .qualify-next { flex: 1; text-align: center; }
+.qualify-nav .qualify-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+.qualify-nav .qualify-back { flex-shrink: 0; }
+
+.qualify-final { text-align: center; padding: 12px 0 4px; }
+.qualify-final-icon { width: 56px; height: 56px; border-radius: 50%; background: rgba(46,204,113,0.15); color: var(--success); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.qualify-final .qualify-question { margin-bottom: 10px; }
+
+@media (max-width: 560px) {
+  .qualify-modal { padding: 30px 22px 24px; border-radius: 20px; }
+}
 </style>
 </head>
 <body>
@@ -759,6 +801,23 @@ body::before {
   </div>
 </footer>
 
+<div class="qualify-overlay" id="qualifyOverlay" hidden>
+  <div class="qualify-modal" role="dialog" aria-modal="true" aria-label="Cuestionario para agendar reunión">
+    <button class="qualify-close" id="qualifyClose" type="button" aria-label="Cerrar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="qualify-progress">
+      <div class="qualify-progress-track"><div class="qualify-progress-fill" id="qualifyProgressFill"></div></div>
+      <span class="qualify-progress-label" id="qualifyProgressLabel">Pregunta 1 de 3</span>
+    </div>
+    <div class="qualify-body" id="qualifyBody"></div>
+    <div class="qualify-nav" id="qualifyNav">
+      <button class="ghost-btn qualify-back" id="qualifyBack" type="button">Atrás</button>
+      <button class="cta-primary qualify-next" id="qualifyNext" type="button" disabled>Continuar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (function () {
   var navEl = document.querySelector('.nav');
@@ -828,6 +887,186 @@ body::before {
       });
     });
   }
+})();
+</script>
+
+<script>
+(function () {
+  var QUESTIONS = [
+    {
+      question: '¿Cuánto inviertes hoy en publicidad digital (Meta Ads)?',
+      options: [
+        'Aún no invertimos en ads',
+        'Recién estamos empezando',
+        'Invertimos de forma constante',
+        'Invertimos fuerte y buscamos escalar'
+      ]
+    },
+    {
+      question: '¿Cuál es el problema más grande hoy en tu negocio?',
+      options: [
+        'Se nos escapan leads porque no respondemos a tiempo',
+        'Hacemos mucho trabajo manual que se podría automatizar',
+        'Los ads no están convirtiendo como esperamos',
+        'Aún no lo tengo claro, quiero una asesoría'
+      ]
+    },
+    {
+      question: '¿Qué tan pronto quieres implementar esto?',
+      options: [
+        'Lo antes posible, es urgente',
+        'Este mes',
+        'Este trimestre',
+        'Solo estoy cotizando o investigando'
+      ]
+    }
+  ];
+  var LETTERS = ['A', 'B', 'C', 'D'];
+  var TOTAL_STEPS = QUESTIONS.length + 1;
+  var WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxXMYm5Zos1PTH4U2VVcU5MzQGpjc3l_8wRtlOv8TUl6W2nglk5EQbCjoTVlZiBMnB0fA/exec';
+
+  var overlay = document.getElementById('qualifyOverlay');
+  var body = document.getElementById('qualifyBody');
+  var progressFill = document.getElementById('qualifyProgressFill');
+  var progressLabel = document.getElementById('qualifyProgressLabel');
+  var nav = document.getElementById('qualifyNav');
+  var backBtn = document.getElementById('qualifyBack');
+  var nextBtn = document.getElementById('qualifyNext');
+  var closeBtn = document.getElementById('qualifyClose');
+  if (!overlay) return;
+
+  var step = 0;
+  var answers = [null, null, null];
+  var contact = { name: '', phone: '' };
+  var targetUrl = '';
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function renderStep() {
+    if (step < QUESTIONS.length) {
+      var q = QUESTIONS[step];
+      var html = '<h3 class="qualify-question">' + q.question + '</h3><div class="qualify-options">';
+      q.options.forEach(function (opt, i) {
+        var selected = answers[step] === i ? ' is-selected' : '';
+        html += '<button type="button" class="qualify-option' + selected + '" data-index="' + i + '">' +
+          '<span class="qualify-option-letter">' + LETTERS[i] + '</span>' +
+          '<span class="qualify-option-text">' + opt + '</span></button>';
+      });
+      html += '</div>';
+      body.innerHTML = html;
+      body.querySelectorAll('.qualify-option').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          answers[step] = parseInt(btn.getAttribute('data-index'), 10);
+          renderStep();
+        });
+      });
+      progressLabel.textContent = 'Pregunta ' + (step + 1) + ' de ' + QUESTIONS.length;
+      nextBtn.textContent = 'Continuar';
+      nextBtn.disabled = answers[step] === null;
+    } else {
+      body.innerHTML =
+        '<h3 class="qualify-question">Cuéntanos cómo contactarte</h3>' +
+        '<p class="qualify-subtext">Te escribimos por WhatsApp para confirmar la reunión.</p>' +
+        '<label class="qualify-label">Nombre<input class="qualify-input" id="qualifyName" type="text" placeholder="Tu nombre" autocomplete="name"></label>' +
+        '<label class="qualify-label">WhatsApp<input class="qualify-input" id="qualifyPhone" type="tel" placeholder="+56 9 1234 5678" autocomplete="tel"></label>';
+      var nameInput = document.getElementById('qualifyName');
+      var phoneInput = document.getElementById('qualifyPhone');
+      nameInput.value = contact.name;
+      phoneInput.value = contact.phone;
+      function validateContact() {
+        contact.name = nameInput.value.trim();
+        contact.phone = phoneInput.value.trim();
+        var phoneOk = /^[+\d][\d\s-]{7,}$/.test(contact.phone);
+        nextBtn.disabled = !(contact.name.length > 1 && phoneOk);
+      }
+      nameInput.addEventListener('input', validateContact);
+      phoneInput.addEventListener('input', validateContact);
+      progressLabel.textContent = 'Último paso';
+      nextBtn.textContent = 'Ver horarios disponibles';
+      validateContact();
+    }
+    progressFill.style.width = (((step + 1) / TOTAL_STEPS) * 100) + '%';
+    backBtn.style.visibility = step === 0 ? 'hidden' : 'visible';
+  }
+
+  function renderFinal() {
+    body.innerHTML =
+      '<div class="qualify-final">' +
+      '<div class="qualify-final-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>' +
+      '<h3 class="qualify-question">¡Listo' + (contact.name ? ', ' + escapeHtml(contact.name) : '') + '!</h3>' +
+      '<p class="qualify-subtext">Se abrió una nueva pestaña para que elijas el día y la hora que más te acomode.</p>' +
+      '</div>';
+    nav.hidden = true;
+    progressFill.style.width = '100%';
+    progressLabel.textContent = 'Completado';
+  }
+
+  function submitLead() {
+    var payload = {
+      nombre: contact.name,
+      whatsapp: contact.phone,
+      inversion: QUESTIONS[0].options[answers[0]] || '',
+      problema: QUESTIONS[1].options[answers[1]] || '',
+      urgencia: QUESTIONS[2].options[answers[2]] || '',
+      origen: window.location.href
+    };
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+  }
+
+  function openModal(url) {
+    targetUrl = url;
+    step = 0;
+    answers = [null, null, null];
+    contact = { name: '', phone: '' };
+    nav.hidden = false;
+    overlay.hidden = false;
+    document.documentElement.style.overflow = 'hidden';
+    renderStep();
+  }
+
+  function closeModal() {
+    overlay.hidden = true;
+    document.documentElement.style.overflow = '';
+  }
+
+  document.querySelectorAll('a[href*="calendar.app.google"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      openModal(link.href);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !overlay.hidden) closeModal();
+  });
+
+  backBtn.addEventListener('click', function () {
+    if (step > 0) { step--; renderStep(); }
+  });
+
+  nextBtn.addEventListener('click', function () {
+    if (step < QUESTIONS.length) {
+      step++;
+      renderStep();
+    } else {
+      submitLead();
+      window.open(targetUrl, '_blank', 'noopener');
+      renderFinal();
+    }
+  });
 })();
 </script>
 </body>
