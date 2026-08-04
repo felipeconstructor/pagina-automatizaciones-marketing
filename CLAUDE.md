@@ -62,7 +62,7 @@ con emulación de dispositivo (CDP device metrics).
 
 - **Agendamiento**: los botones "Agendar reunión" apuntan a un evento de
   Google Calendar (`target="_blank"`):
-  https://calendar.app.google/zKUp8LvVAKHzRGVF8
+  https://calendar.app.google/vx7JnYVW34hhfntu6
 - **Meta Pixel + Conversions API**: EN PAUSA a pedido explícito de Felipe —
   no avanzar hasta que lo pida.
 - **Notificación WhatsApp al equipo al agendar**: opcional, no implementado.
