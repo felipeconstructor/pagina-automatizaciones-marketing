@@ -163,6 +163,48 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   red), el webhook del cuestionario de leads (Google Apps Script) va sobre
   HTTPS. Meta Pixel sigue en pausa como estaba acordado.
 
+### Avance (4 ago 2026, sesión de tarde) — permisos, link de agenda, favicon Safari
+
+- Felipe subió a Rodolfo (`rmenadrop-blip`) a rol **Write** en el repo (antes
+  solo tenía `pull`). Confirmado vía API: `push: true`, `triage: true`, pero
+  **`admin: false`** — Settings → Pages sigue sin ser visible/editable para
+  Rodolfo, así que la verificación del dominio + "Enforce HTTPS" sigue
+  dependiendo 100% de que Felipe lo haga desde su cuenta.
+- Se cambió el link de agendamiento a la cuenta de Gmail nueva del negocio:
+  de `https://calendar.app.google/zKUp8LvVAKHzRGVF8` a
+  `https://calendar.app.google/vx7JnYVW34hhfntu6` (commit `45400d7`).
+- El favicon SVG inline no se veía en **Safari** (soporte poco confiable de
+  Safari para favicons SVG en data URI, aunque Chrome/Firefox sí lo
+  mostraban). Se reemplazó por PNG generados con `sips`/`qlmanage` a partir
+  de `assets/favicon.svg` (mismo diseño, monograma "K"): `favicon-16.png`,
+  `favicon-32.png`, `apple-touch-icon.png` (180×180). El SVG se dejó como
+  opción adicional para navegadores que sí lo soportan (commit `e458e0e`).
+- Verificado de nuevo el estado del dominio al final del día: **sin
+  cambios** respecto al checklist de arriba — `protected_domain_state`
+  sigue `unverified`, `https_enforced: false`, `http://khrono.cl` sigue en
+  texto plano. Felipe todavía no hizo los pasos del TXT/Enforce HTTPS.
+
+## Redes sociales
+
+- **Gmail del negocio**: `khrono.ai@gmail.com` (nuevo, distinto del que se
+  usa para el dominio/GitHub).
+- **Instagram**: cuenta creada. Usuario final `@khrono.ai` (no `khrono.cl`,
+  no quedó disponible ese exacto). Nombre: "Khrono | Automatización IA".
+  Bio:
+  > Automatizaciones a medida con IA para tu negocio
+  > Chatbots 24/7 · Copiloto empresarial · Marketing IA
+  > 👇 Agenda una reunión gratis
+
+  Pendiente: subir foto de perfil (no tiene) y cargar el link del sitio web
+  en la bio — Instagram **no permite editar el link desde la versión web**,
+  solo desde la app móvil.
+- **TikTok**: registro iniciado con el mismo Gmail, quedó a mitad de camino
+  — el código de verificación por correo expiraba antes de poder
+  ingresarlo a tiempo. Pendiente: reintentar el registro (pedir código
+  nuevo y escribirlo apenas llegue), elegir usuario (probar `khrono.cl`
+  igual que se intentó en Instagram), y aplicar el mismo nombre/bio de
+  marca una vez creada.
+
 ## Convenciones
 
 - Código y comentarios en español
