@@ -94,6 +94,75 @@ reenvío de URL.
 **Pendiente:** confirmar que Felipe completó el registro en NIC.cl y
 configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
 
+### Avance (4 ago 2026)
+
+- DNS ya está bien propagado: los 4 registros A y el CNAME de `www` resuelven
+  correctamente a GitHub Pages, y los nameservers de Cloudflare están activos
+  en el dominio. El repo ya tiene el archivo `CNAME` con `khrono.cl` (commit
+  `d14834c`).
+- `http://khrono.cl` responde 200. `https://khrono.cl` **todavía falla**: el
+  certificado servido es el genérico `*.github.io`, no uno emitido para
+  `khrono.cl` — GitHub aún no termina de provisionar el cert Let's Encrypt
+  para el dominio custom.
+- GitHub ahora pide un paso adicional no contemplado en el plan original:
+  **verificar la propiedad del dominio** vía un registro **TXT** (Settings →
+  Pages te da un "Host" y un "TXT value" para agregar en el DNS) antes de
+  dejar activar/reconfirmar el custom domain. Pendiente completar: agregar
+  ese TXT en Cloudflare (sin proxy, como cualquier TXT) y volver a GitHub a
+  hacer clic en "Verify".
+- Intentamos subir a Rodolfo (`rmenadrop-blip`) a rol **Admin** como
+  colaborador del repo para que pudiera revisar Settings → Pages sin
+  depender de Felipe, pero la UI de colaboradores de GitHub no mostró un
+  selector de rol claro (ni al añadir por primera vez ni al re-invitar tras
+  eliminarlo). Se abandonó ese camino por ahora — **se sigue trabajando
+  directo en el PC de Felipe**, logueado como `felipeconstructor`, dueño del
+  repo.
+- Verificar de nuevo cuando el TXT esté agregado y confirmado: que el
+  banner de error de DNS desaparezca en Settings → Pages y que se habilite
+  el checkbox "Enforce HTTPS".
+
+### Avance (4 ago 2026, más tarde) — checklist de lanzamiento
+
+- **El certificado ya se emitió**: `https://khrono.cl` ahora responde 200
+  con un cert de Let's Encrypt válido para `khrono.cl` y `www.khrono.cl`
+  (expira 2 nov 2026). `www.khrono.cl` redirige (301) a `https://khrono.cl`
+  correctamente. Confirmado vía `repos/.../pages` API:
+  `https_certificate.state: "approved"`.
+- **Pendiente de seguridad real, sigue bloqueado**: `protected_domain_state`
+  sigue en `"unverified"` (el TXT del punto anterior nunca se agregó) y
+  `https_enforced: false`. Esto significa que `http://khrono.cl` sirve la
+  página **en texto plano** en vez de redirigir a HTTPS — hay que cerrar
+  esto antes de invertir en publicidad.
+- **Bloqueo de acceso confirmado**: la cuenta `rmenadrop-blip` (Rodolfo)
+  solo tiene permiso `pull` sobre el repo (sin `push` ni `admin`), así que
+  no puede ver el valor del TXT de verificación ni tocar el checkbox
+  "Enforce HTTPS" vía API ni UI. **Estos 2 pasos los tiene que hacer Felipe
+  desde su propia sesión de GitHub** (`felipeconstructor`):
+  1. Entrar a github.com/settings/pages (o Settings → Pages del repo,
+     según dónde lo muestre la cuenta) y abrir la verificación de
+     `khrono.cl` para obtener el **Host** y el **TXT value**.
+  2. Agregar ese TXT en Cloudflare (DNS del dominio, sin proxy/nube
+     naranja apagada) tal cual lo pide GitHub.
+  3. Volver a GitHub y hacer clic en **"Verify"**.
+  4. Una vez verificado, entrar a Settings → Pages del repo y activar el
+     checkbox **"Enforce HTTPS"**.
+  5. Confirmar después: `curl -I http://khrono.cl` debe responder
+     `301`/`308` redirigiendo a `https://khrono.cl` (hoy responde `200`
+     en texto plano).
+- **Mejoras de código para publicidad, ya hechas**: se agregó favicon
+  (SVG inline, monograma "K" con los colores de marca) y meta tags
+  Open Graph / Twitter Card (`og:title`, `og:description`, `og:image`,
+  `twitter:card`) en el `<head>`, para que el link se vea bien con
+  imagen y título al compartirlo en WhatsApp/Instagram/Meta Ads. La
+  imagen social (`assets/og-image.jpg`, 1200×630) es un recorte
+  horizontal de `assets/hero-bg.jpg`.
+- **Revisión de seguridad del código** (para descartar riesgos antes de
+  lanzar): sin API keys ni secretos expuestos, todos los `target="_blank"`
+  ya tienen `rel="noopener"`, sin mixed content real (el único `http://`
+  en el archivo es el namespace XML de un SVG decorativo, no una carga de
+  red), el webhook del cuestionario de leads (Google Apps Script) va sobre
+  HTTPS. Meta Pixel sigue en pausa como estaba acordado.
+
 ## Convenciones
 
 - Código y comentarios en español
