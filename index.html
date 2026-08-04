@@ -347,6 +347,9 @@ body::before {
   background: rgba(10,10,9,0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.12); color: #fff; padding: 5px 11px; border-radius: 999px;
 }
+.card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; transition: transform 0.5s ease; }
+.service-card:hover .card-photo { transform: scale(1.05); }
+.card-visual.has-photo::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(10,10,9,0.55) 0%, rgba(10,10,9,0.05) 45%, rgba(10,10,9,0.65) 100%); }
 .visual-copiloto { background: radial-gradient(circle at 28% 28%, rgba(255,107,53,0.4), transparent 60%), repeating-linear-gradient(45deg, rgba(255,255,255,0.045) 0 2px, transparent 2px 15px), var(--card); color: var(--accent); }
 .visual-chatbot { background: radial-gradient(circle at 72% 28%, rgba(46,204,113,0.28), transparent 55%), radial-gradient(circle at 28% 78%, rgba(255,107,53,0.28), transparent 55%), var(--card); color: var(--accent-2); }
 .visual-ads { background: repeating-radial-gradient(circle at 50% 50%, rgba(255,107,53,0.2) 0 2px, transparent 2px 22px), var(--card); color: var(--accent); }
@@ -617,12 +620,9 @@ body::before {
     <div class="services-scroll-wrap">
       <div class="services-scroll">
         <div class="service-card reveal" style="transition-delay:0ms">
-          <div class="card-visual visual-copiloto">
+          <div class="card-visual visual-copiloto has-photo">
+            <img class="card-photo" src="assets/card-copiloto.jpg" alt="Equipo de especialistas IA colaborando con un usuario" loading="lazy">
             <span class="card-badge">Automatización IA</span>
-            <div class="mock">
-              <div class="mock-bubble mock-bubble-user">¿Cuál es el stock del producto X?</div>
-              <div class="mock-bubble mock-bubble-ai">Quedan 14 unidades en bodega central.</div>
-            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Copiloto empresarial</div>
@@ -635,12 +635,9 @@ body::before {
         </div>
 
         <div class="service-card reveal" style="transition-delay:60ms">
-          <div class="card-visual visual-chatbot">
+          <div class="card-visual visual-chatbot has-photo">
+            <img class="card-photo" src="assets/card-chatbot.jpg" alt="Agente de atención al cliente respondiendo por videollamada" loading="lazy">
             <span class="card-badge">Atención al cliente</span>
-            <div class="mock">
-              <div class="mock-bubble mock-bubble-ai">¡Hola! ¿En qué te ayudo? 👋</div>
-              <div class="mock-dots"><span></span><span></span><span></span></div>
-            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Chatbot de atención 24/7</div>
@@ -653,12 +650,9 @@ body::before {
         </div>
 
         <div class="service-card reveal" style="transition-delay:120ms">
-          <div class="card-visual visual-ads">
+          <div class="card-visual visual-ads has-photo">
+            <img class="card-photo" src="assets/card-ads.jpg" alt="Cámara y letrero de Social Media Marketing" loading="lazy">
             <span class="card-badge">Marketing</span>
-            <div class="mock mock-chart">
-              <div class="mock-bars"><span style="height:32%"></span><span style="height:52%"></span><span style="height:44%"></span><span style="height:70%"></span><span style="height:96%"></span></div>
-              <div class="mock-chart-tag">Costo por reunión −38%</div>
-            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Marketing con IA (Meta Ads)</div>
@@ -671,16 +665,9 @@ body::before {
         </div>
 
         <div class="service-card reveal" style="transition-delay:180ms">
-          <div class="card-visual visual-landing">
+          <div class="card-visual visual-landing has-photo">
+            <img class="card-photo" src="assets/card-landing.jpg" alt="Mockup de diseño de página web en laptop" loading="lazy">
             <span class="card-badge">Diseño y conversión</span>
-            <div class="mock mock-browser">
-              <div class="mock-browser-bar"><span></span><span></span><span></span></div>
-              <div class="mock-browser-body">
-                <div class="mock-line w70"></div>
-                <div class="mock-line w45"></div>
-                <div class="mock-browser-btn">Agendar reunión</div>
-              </div>
-            </div>
           </div>
           <div class="card-body">
             <div class="card-title">Landing pages</div>
