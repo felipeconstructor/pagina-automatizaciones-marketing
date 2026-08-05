@@ -173,9 +173,10 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   GitHub Pages.** `protected_domain_state` sigue `"unverified"` y
   `https_enforced: false` — `http://khrono.cl` (sin S) sirve la página en
   texto plano en vez de redirigir a HTTPS. Solo lo puede hacer Felipe desde
-  su propia sesión de GitHub (`felipeconstructor`), Rodolfo no tiene permiso
-  suficiente. Pasos (detalle completo en "Avance (4 ago 2026, más tarde)"
-  más abajo):
+  su propia sesión de GitHub (`felipeconstructor`): Rodolfo ya tiene rol
+  Write en el repo pero **no Admin**, así que Settings → Pages sigue sin
+  ser visible/editable para él. Pasos (detalle completo en "Avance (4 ago
+  2026, más tarde)" más abajo):
   1. github.com → repo → Settings → Pages → abrir verificación de
      `khrono.cl` → copiar **Host** y **TXT value**.
   2. Agregar ese TXT en Cloudflare (DNS del dominio, sin proxy).
@@ -183,7 +184,55 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   4. Activar el checkbox **"Enforce HTTPS"** en Settings → Pages.
   5. Confirmar: `curl -I http://khrono.cl` debe responder `301`/`308` hacia
      `https://khrono.cl` (hoy responde `200` en texto plano).
-  **Cerrar esto antes de invertir en publicidad** (Meta Ads, etc.).
+  **Cerrar esto antes de invertir en publicidad** (Meta Ads, etc.). Sigue
+  sin hacerse a la fecha (verificado de nuevo la noche del 4 ago 2026).
+- **[Opcional] Instagram**: subir foto de perfil y cargar el link del sitio
+  en la bio (solo se puede desde la app móvil, no desde la web).
+- **[Opcional] TikTok**: terminar el registro (quedó a mitad de camino, el
+  código de verificación por correo expiró) y elegir usuario/nombre/bio de
+  marca.
+
+### Avance (4 ago 2026, sesión de tarde) — permisos, link de agenda, favicon Safari
+
+- Felipe subió a Rodolfo (`rmenadrop-blip`) a rol **Write** en el repo (antes
+  solo tenía `pull`). Confirmado vía API: `push: true`, `triage: true`, pero
+  **`admin: false`** — Settings → Pages sigue sin ser visible/editable para
+  Rodolfo, así que la verificación del dominio + "Enforce HTTPS" sigue
+  dependiendo 100% de que Felipe lo haga desde su cuenta.
+- Se cambió el link de agendamiento a la cuenta de Gmail nueva del negocio:
+  de `https://calendar.app.google/zKUp8LvVAKHzRGVF8` a
+  `https://calendar.app.google/vx7JnYVW34hhfntu6` (commit `45400d7`).
+- El favicon SVG inline no se veía en **Safari** (soporte poco confiable de
+  Safari para favicons SVG en data URI, aunque Chrome/Firefox sí lo
+  mostraban). Se reemplazó por PNG generados con `sips`/`qlmanage` a partir
+  de `assets/favicon.svg` (mismo diseño, monograma "K"): `favicon-16.png`,
+  `favicon-32.png`, `apple-touch-icon.png` (180×180). El SVG se dejó como
+  opción adicional para navegadores que sí lo soportan (commit `e458e0e`).
+- Verificado de nuevo el estado del dominio al final del día: **sin
+  cambios** respecto al checklist de arriba — `protected_domain_state`
+  sigue `unverified`, `https_enforced: false`, `http://khrono.cl` sigue en
+  texto plano. Felipe todavía no hizo los pasos del TXT/Enforce HTTPS.
+
+## Redes sociales
+
+- **Gmail del negocio**: `khrono.ai@gmail.com` (nuevo, distinto del que se
+  usa para el dominio/GitHub).
+- **Instagram**: cuenta creada. Usuario final `@khrono.ai` (no `khrono.cl`,
+  no quedó disponible ese exacto). Nombre: "Khrono | Automatización IA".
+  Bio:
+  > Automatizaciones a medida con IA para tu negocio
+  > Chatbots 24/7 · Copiloto empresarial · Marketing IA
+  > 👇 Agenda una reunión gratis
+
+  Pendiente: subir foto de perfil (no tiene) y cargar el link del sitio web
+  en la bio — Instagram **no permite editar el link desde la versión web**,
+  solo desde la app móvil.
+- **TikTok**: registro iniciado con el mismo Gmail, quedó a mitad de camino
+  — el código de verificación por correo expiraba antes de poder
+  ingresarlo a tiempo. Pendiente: reintentar el registro (pedir código
+  nuevo y escribirlo apenas llegue), elegir usuario (probar `khrono.cl`
+  igual que se intentó en Instagram), y aplicar el mismo nombre/bio de
+  marca una vez creada.
 
 ## Convenciones
 
