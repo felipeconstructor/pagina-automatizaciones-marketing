@@ -52,7 +52,11 @@ con emulación de dispositivo (CDP device metrics).
   primer paso, no Instagram Ads)
 - "Quiénes somos" con bios de los fundadores y estadísticas reales (antes
   eran solo iniciales)
-- Tarjetas de servicio con íconos contextuales
+- Tarjetas de servicio con foto real de fondo (Copiloto empresarial, Chatbot
+  24/7, Marketing con IA, Landing pages — en `assets/card-*.jpg`) + badge
+  superpuesto con degradado oscuro para legibilidad; las tarjetas RAG de
+  datos y "Cotiza con nosotros" siguen con el mockup CSS original (4 ago
+  2026, commit `55b6c48`)
 - Cuestionario de calificación de leads antes de poder agendar reunión
   (agregado para filtrar quién agenda)
 - Mensaje central: automatizaciones **hechas a medida**, no plantillas
@@ -162,6 +166,24 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   en el archivo es el namespace XML de un SVG decorativo, no una carga de
   red), el webhook del cuestionario de leads (Google Apps Script) va sobre
   HTTPS. Meta Pixel sigue en pausa como estaba acordado.
+
+## Pendientes (cosas por hacer)
+
+- **[Felipe, seguridad] Verificar dominio + activar "Enforce HTTPS" en
+  GitHub Pages.** `protected_domain_state` sigue `"unverified"` y
+  `https_enforced: false` — `http://khrono.cl` (sin S) sirve la página en
+  texto plano en vez de redirigir a HTTPS. Solo lo puede hacer Felipe desde
+  su propia sesión de GitHub (`felipeconstructor`), Rodolfo no tiene permiso
+  suficiente. Pasos (detalle completo en "Avance (4 ago 2026, más tarde)"
+  más abajo):
+  1. github.com → repo → Settings → Pages → abrir verificación de
+     `khrono.cl` → copiar **Host** y **TXT value**.
+  2. Agregar ese TXT en Cloudflare (DNS del dominio, sin proxy).
+  3. Volver a GitHub y hacer clic en **"Verify"**.
+  4. Activar el checkbox **"Enforce HTTPS"** en Settings → Pages.
+  5. Confirmar: `curl -I http://khrono.cl` debe responder `301`/`308` hacia
+     `https://khrono.cl` (hoy responde `200` en texto plano).
+  **Cerrar esto antes de invertir en publicidad** (Meta Ads, etc.).
 
 ## Convenciones
 
