@@ -184,6 +184,27 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   sigue `unverified`, `https_enforced: false`, `http://khrono.cl` sigue en
   texto plano. Felipe todavía no hizo los pasos del TXT/Enforce HTTPS.
 
+### Avance (5 ago 2026) — verificación de estado real
+
+- Se volvió a chequear el estado del dominio vía API de GitHub
+  (`repos/.../pages`) y `curl` directo. **Sigue igual que el 4 ago, sin
+  avance real**, a pesar de que se creía que había quedado resuelto el día
+  anterior:
+  - `protected_domain_state`: **`unverified`** (el TXT de verificación
+    sigue sin agregarse/confirmarse en Cloudflare).
+  - `https_enforced`: **`false`**.
+  - `http://khrono.cl` responde **200 en texto plano** (no redirige a
+    HTTPS).
+  - Lo que sí funciona: certificado válido (`https_certificate.state:
+    approved`, expira 2 nov 2026), `https://khrono.cl` responde 200, y
+    `https://www.khrono.cl` redirige (301) correctamente a
+    `https://khrono.cl`.
+- Conclusión: si Felipe siguió los pasos del TXT, no quedaron aplicados o
+  no se confirmó con "Verify" en GitHub. Al retomar, confirmar con él
+  puntualmente si (a) agregó el TXT en Cloudflare y (b) hizo clic en
+  "Verify" en GitHub después de agregarlo — no asumir que "ya se hizo"
+  sin volver a chequear la API.
+
 ## Redes sociales
 
 - **Gmail del negocio**: `khrono.ai@gmail.com` (nuevo, distinto del que se
