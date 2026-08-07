@@ -52,11 +52,16 @@ con emulación de dispositivo (CDP device metrics).
   primer paso, no Instagram Ads)
 - "Quiénes somos" con bios de los fundadores y estadísticas reales (antes
   eran solo iniciales)
-- Tarjetas de servicio con foto real de fondo (Copiloto empresarial, Chatbot
-  24/7, Marketing con IA, Landing pages — en `assets/card-*.jpg`) + badge
-  superpuesto con degradado oscuro para legibilidad; las tarjetas RAG de
-  datos y "Cotiza con nosotros" siguen con el mockup CSS original (4 ago
-  2026, commit `55b6c48`)
+- Tarjetas de servicio con foto real de fondo, las 6: Copiloto empresarial,
+  Chatbot 24/7, Marketing con IA, Landing pages, RAG de datos y "Cotiza con
+  nosotros" (`assets/card-*.jpg`) + badge superpuesto con degradado oscuro
+  para legibilidad. Patrón `.card-visual.has-photo` +
+  `<img class="card-photo">` + `<span class="card-badge">`; el
+  `object-position` de cada foto se controla por selector
+  `[src*="card-X"]` en el CSS. Últimas 2 tarjetas (RAG y Cotiza) se
+  convirtieron de mockup CSS a foto real el 7 ago 2026, commit `69bbbed`.
+- Botón flotante de WhatsApp (`.wa-float`, esquina inferior derecha, anillo
+  animado + pulso) a `+56996996933`, agregado 7 ago 2026, commit `69bbbed`.
 - Cuestionario de calificación de leads antes de poder agendar reunión
   (agregado para filtrar quién agenda)
 - Mensaje central: automatizaciones **hechas a medida**, no plantillas
@@ -324,6 +329,24 @@ https://claude.ai/code/artifact/8659f73d-3b95-4e07-ad96-cef821e9d2d4
   datos de uso reales una vez haya clientes activos, y decidir si vale la
   pena migrar esta calculadora a un archivo dentro del repo en vez de
   vivir solo como Artifact.
+
+## Nota — "no se ve actualizado" casi siempre es caché del navegador (7 ago 2026)
+
+Después de pushear el botón de WhatsApp y las 6 fotos de tarjetas
+(commit `69bbbed`), Felipe reportó que en su dispositivo las tarjetas se
+veían "como antes" y el botón de WhatsApp no aparecía. Se verificó con
+`curl -I` directo al servidor (HTML y assets `.jpg`) y **todo estaba
+correcto del lado del servidor**: `Last-Modified` con la fecha/hora del
+deploy, `Cache-Control: max-age=600`. Una pestaña nueva de Chrome (vía
+Claude-in-Chrome) mostró la página perfecta, hero y botón incluidos.
+Conclusión: era **caché local del navegador/dispositivo de Felipe**, no un
+problema real del sitio. Antes de investigar más a fondo un reporte de
+"no se ve bien"/"no aparece", conviene primero: (1) `curl -I` al dominio y
+a los assets sospechosos para comparar `Last-Modified` con la hora del
+último commit, (2) abrir en una pestaña nueva/incógnito, y solo si eso
+también falla, asumir que es un bug real. Pedir recarga forzada
+(`Cmd+Shift+R` / cerrar y reabrir el navegador del celular) resuelve la
+mayoría de estos casos.
 
 ## Convenciones
 
