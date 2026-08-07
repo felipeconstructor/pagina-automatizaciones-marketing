@@ -63,8 +63,8 @@ con emulación de dispositivo (CDP device metrics).
 - **Agendamiento**: los botones "Agendar reunión" apuntan a un evento de
   Google Calendar (`target="_blank"`):
   https://calendar.app.google/vx7JnYVW34hhfntu6
-- **Meta Pixel + Conversions API**: EN PAUSA a pedido explícito de Felipe —
-  no avanzar hasta que lo pida.
+- **Meta Pixel**: instalado (7 ago 2026), ver sección "Estado — Meta Pixel /
+  campaña de Ads" más abajo.
 - **Notificación WhatsApp al equipo al agendar**: opcional, no implementado.
   Patrón sugerido: webhook de Google Calendar → Make.com → Kapso (mismo
   patrón que el reporte semanal de leads de Nova).
@@ -161,7 +161,41 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   ya tienen `rel="noopener"`, sin mixed content real (el único `http://`
   en el archivo es el namespace XML de un SVG decorativo, no una carga de
   red), el webhook del cuestionario de leads (Google Apps Script) va sobre
-  HTTPS. Meta Pixel sigue en pausa como estaba acordado.
+  HTTPS.
+
+## Estado — Meta Pixel / campaña de Ads (7 ago 2026)
+
+Rodolfo pidió preparar una campaña de Meta Ads para Khrono. El Pixel había
+quedado "en pausa a pedido de Felipe" (ver historial de commits), pero
+Rodolfo indicó explícitamente instalarlo usando su propia cuenta de Meta
+Business ya logueada en Chrome — no hubo una confirmación nueva de Felipe
+en esta sesión, queda anotado por transparencia.
+
+- **Cuenta publicitaria**: "Auto n" (Business ID `1700614931116834`) →
+  cuenta de anuncios "Automatizaciones" (ya tenía otro pixel de otro
+  proyecto de Rodolfo, "Laorio 2", ID `1918832828705433` — no tocar ese).
+- **Conjunto de datos / Pixel nuevo creado para Khrono**: nombre
+  `Khrono`, **ID `1046895985015967`**, conectado a la cuenta
+  "Automatizaciones".
+- **Instalado en el sitio** (`index.html`): snippet base del Pixel en el
+  `<head>` (antes de `</head>`), con `fbq('track', 'PageView')`
+  automático.
+- **Eventos personalizados agregados** en el flujo del cuestionario de
+  calificación de leads (mismo JS que llama a `submitLead()` /
+  `WEBHOOK_URL`):
+  - `fbq('track', 'Lead')` — se dispara en `submitLead()`, cuando se
+    completa el cuestionario con nombre y WhatsApp (mismo momento en que
+    se manda el lead al webhook de Google Apps Script).
+  - `fbq('track', 'Schedule')` — se dispara justo después de abrir el
+    link de Google Calendar (evento estándar de Meta para agendamiento).
+- **Pendiente**: verificar en Meta Events Manager (pestaña "Probar
+  eventos" del dataset `Khrono`) que `PageView`, `Lead` y `Schedule`
+  lleguen correctamente una vez el cambio esté en producción. Considerar
+  más adelante activar "Coincidencias avanzadas automáticas" (quedó
+  desactivado al crear el pixel) y/o Conversions API — no se hizo en esta
+  sesión.
+- Conversions API (server-side) **no** se configuró, solo el Pixel de
+  navegador — suficiente para la fase de testing inicial de la campaña.
 
 ### Avance (4 ago 2026, sesión de tarde) — permisos, link de agenda, favicon Safari
 
@@ -225,6 +259,42 @@ configurar Cloudflare + GitHub Pages una vez el dominio esté activo.
   nuevo y escribirlo apenas llegue), elegir usuario (probar `khrono.cl`
   igual que se intentó en Instagram), y aplicar el mismo nombre/bio de
   marca una vez creada.
+
+## Calculadora de cotización (uso interno)
+
+Herramienta interna para cotizar proyectos a clientes — **no vive en este
+repo**, es un Claude Artifact aparte (no un archivo del sitio público):
+https://claude.ai/code/artifact/8659f73d-3b95-4e07-ad96-cef821e9d2d4
+
+- **Qué hace**: formulario (nicho, tamaño de negocio, complejidad, canales,
+  agentes/flujos, CRM, RAG, landing) que calcula un **setup** (pago único)
+  y una **mensualidad**, y arma un recibo con desglose. Tiene un panel
+  interno colapsable "Costo real y margen" (no mostrar al cliente) que
+  muestra el gasto real estimado (Claude API, n8n, hosting) y la utilidad.
+- **Motor de precios (5 ago 2026)**: la mensualidad se calcula como
+  `costo real total × margen del tier` — así cualquier canal/agente/CRM/RAG
+  que se agregue mueve la mensualidad automáticamente (antes solo afectaba
+  el setup, eso era un bug). Costo real base: infra $8.000/mes (n8n
+  compartido entre ~6 proyectos + hosting) + uso de Claude API según
+  volumen del tier (emprendimiento/pyme/empresa). Margen aplicado: 13.5x /
+  12.0x / 10.5x respectivamente (el margen ya incluye el x3 que pidió
+  Felipe para cubrir soporte/mantención — el costo real interno quedó sin
+  inflar, fiel a los gastos verdaderos).
+- **Descarga de la cotización**: el botón "Descargar cotización" genera una
+  **imagen PNG** (dibujada con Canvas, con el wordmark KH·RONO y colores de
+  marca) y la descarga vía `window.claude.downloads.save`. Se descartaron
+  PDF y HTML: `.pdf` no está en ningún allowlist de la capacidad
+  `downloads` de Artifacts, y `.html` requiere un permiso "extended types"
+  que esta vista no tiene habilitado (falló con `extension_not_enabled` /
+  se veía como código al abrirlo). PNG sí está en el set base garantizado.
+- **Capacidad `downloads`**: para habilitarla, el artifact no puede estar
+  compartido públicamente (la API rechaza el deploy si lo está). Si hay
+  que reactivar el compartir público después, la descarga probablemente
+  deje de funcionar de nuevo.
+- Pendiente si se retoma: validar los rangos de costo real/margen con
+  datos de uso reales una vez haya clientes activos, y decidir si vale la
+  pena migrar esta calculadora a un archivo dentro del repo en vez de
+  vivir solo como Artifact.
 
 ## Convenciones
 
