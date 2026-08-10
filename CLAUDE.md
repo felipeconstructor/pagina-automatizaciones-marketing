@@ -74,6 +74,8 @@ con emulación de dispositivo (CDP device metrics).
   https://calendar.app.google/vx7JnYVW34hhfntu6
 - **Meta Pixel**: instalado (7 ago 2026), ver sección "Estado — Meta Pixel /
   campaña de Ads" más abajo.
+- **Tracking de visitas + leads (Google Sheet + panel en vivo)**: instalado
+  (10 ago 2026), ver sección "Panel de leads en tiempo real" más abajo.
 - **Notificación WhatsApp al equipo al agendar**: opcional, no implementado.
   Patrón sugerido: webhook de Google Calendar → Make.com → Kapso (mismo
   patrón que el reporte semanal de leads de Nova).
@@ -465,6 +467,65 @@ https://claude.ai/code/artifact/8659f73d-3b95-4e07-ad96-cef821e9d2d4
   datos de uso reales una vez haya clientes activos, y decidir si vale la
   pena migrar esta calculadora a un archivo dentro del repo en vez de
   vivir solo como Artifact.
+
+## Panel de leads en tiempo real (uso interno, 10 ago 2026)
+
+Rodolfo pidió ver en una pantalla cuánta gente entra a `khrono.cl`, cuántos
+completan el cuestionario (leads) y cuántos agendan. Se armó en base a lo
+que ya existía (el webhook de leads), sin levantar backend nuevo.
+
+- **Los leads ya se guardaban** en la Google Sheet "Leads - Automatizaciones
+  y Marketing" (`1hnfYzmISzzOu_aWaxLRYXSzO0EyVMyvu1bZxEUBLt3w`, dueño
+  `rodolfomena051@gmail.com`) vía un Apps Script container-bound a esa
+  Sheet (proyecto "leads"), desplegado como Web App en el mismo
+  `WEBHOOK_URL` que usa `index.html` (`AKfycbxXMYm5Zos1PTH4U2VVcU5MzQGpjc3l_8wRtlOv8TUl6W2nglk5EQbCjoTVlZiBMnB0fA`).
+- **Tracking de visitas agregado**: `index.html`, justo después de
+  `fbq('track', 'PageView')`, hace un `fetch` fire-and-forget (mismo patrón
+  que `submitLead()`) con `{tipo: 'visita', origen: window.location.href}`
+  al mismo `WEBHOOK_URL`.
+- **Apps Script actualizado** (`doPost`/`doGet` del proyecto "leads",
+  editado vía el editor web, no vive en este repo git):
+  - `doPost` ahora distingue por `data.tipo`: sin `tipo` (o `'lead'`) sigue
+    escribiendo en la pestaña de leads exactamente igual que antes
+    (compatibilidad total); `tipo === 'visita'` escribe en una pestaña
+    nueva **"Visitas"** (Fecha, Origen), creándola sola si no existe.
+  - Se cambió `getActiveSheet()` por `getSheetByName('Untitled')` — con
+    `getActiveSheet()` el próximo lead se podía ir a la pestaña
+    equivocada si alguien dejaba abierta la pestaña "Visitas" en el
+    navegador (bug latente que se vuelve real en cuanto hay 2 pestañas).
+  - Se agregó `doGet(e)`, público, que devuelve
+    `{ visitas, leads, agendamientos, ultimaActualizacion }` (conteo de
+    filas de cada pestaña). No requiere auth, mismo modelo de acceso que
+    ya usaba `doPost`.
+  - Desplegado como **nueva versión de la misma implementación** (no
+    "nueva implementación"), así que `WEBHOOK_URL` no cambió.
+  - **"Agendamientos" es un proxy** = mismo número que "Leads": el clic
+    que completa el cuestionario es el mismo que abre Google Calendar
+    (`index.html`, handler de `nextBtn`), no hay confirmación real de que
+    la persona eligió un horario. Conectar la Google Calendar real
+    (`khrono.ai@gmail.com`) queda pendiente si se necesita el dato exacto.
+- **Dashboard**: Claude Artifact aparte (no vive en el repo, mismo patrón
+  que la calculadora de cotización) —
+  https://claude.ai/code/artifact/c4ee72fd-354c-4300-b4cd-566ecd8be9c1
+  - Usa la capacidad `mcp` (conector de Google Drive del viewer) con
+    `watchTool` sobre `read_file_content` leyendo directo la Sheet de
+    leads — **no** pega contra el `doGet` del Apps Script (los Artifacts
+    corren con CSP estricta y no pueden hacer `fetch` a un host externo
+    arbitrario aunque el endpoint sea público; solo `downloads` y `mcp`
+    están disponibles como capacidades). El contenido llega como texto
+    markdown (tablas), se parsean las filas de cada pestaña para sacar
+    los conteos.
+  - Por eso el dashboard **requiere que quien lo abra tenga el conector
+    de Google Drive conectado en su cuenta de claude.ai** y acceso a esa
+    Sheet — no funciona para cualquiera, y por usar `mcp` el Artifact no
+    se puede compartir públicamente.
+  - Auto-refresco cada 30s (piso de la plataforma) **mientras la pestaña
+    esté visible/enfocada** — la plataforma pausa el polling si la
+    pestaña queda en segundo plano (comportamiento documentado, no un
+    bug). Recargar la página siempre trae el dato más reciente. Botón
+    "Actualizar ahora" fuerza un refresco manual.
+  - Fuentes (Fraunces + Public Sans) embebidas como `data:` URI para
+    respetar la paleta/tipografía de marca dentro de la CSP del Artifact.
 
 ## Nota — "no se ve actualizado" casi siempre es caché del navegador (7 ago 2026)
 
