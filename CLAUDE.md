@@ -201,6 +201,89 @@ en esta sesión, queda anotado por transparencia.
 - Conversions API (server-side) **no** se configuró, solo el Pixel de
   navegador — suficiente para la fase de testing inicial de la campaña.
 
+### Avance (7-9 ago 2026) — estructura de campaña armada en Ads Manager
+
+Campaña completa armada como **borrador** (no publicada) en la cuenta
+"Automatizaciones" (Ads Manager), pendiente de revisión final de Rodolfo
+antes de publicar. Presupuesto de testeo acordado: **$150.000-300.000
+CLP/mes**, arrancando con **$3.000 CLP/día por conjunto**.
+
+- **Campaña**: "Khrono - Leads WhatsApp/Automatización - Ago 2026",
+  objetivo Clientes potenciales, Advantage+ campaign budget desactivado
+  (presupuesto a nivel de conjunto, no de campaña, para poder comparar
+  conjuntos entre sí), "compartir 20% del presupuesto entre conjuntos"
+  desmarcado a propósito.
+- **Público personalizado de retargeting** ya creado (independiente de
+  que el conjunto 3 esté activo o no, así empieza a acumular gente desde
+  ya): "Khrono - Visitantes sin completar cuestionario (30d)" — sitio web,
+  30 días, excluye a quienes completaron el evento `Lead`.
+- **3 conjuntos de anuncios**, todos con: conversión = Sitio web (no
+  Formularios instantáneos — Meta lo sugiere/preselecciona por defecto,
+  hay que cambiarlo a mano cada vez), conjunto de datos = `Khrono`,
+  evento de conversión = `Cliente potencial`, destino `https://khrono.cl`,
+  complemento del navegador = Ninguno:
+  1. **"01 - Audiencia amplia (frío)"** — Chile, sin intereses, deja que
+     Advantage+ explore. Fecha de inicio programada: 8 ago 2026, 05:00
+     GMT-4. 3 anuncios (imágenes de `ads-khrono/conjunto-1-amplio/`).
+  2. **"02 - Audiencia intereses"** — mismo público base + intereses
+     (marketing digital, automatización, pyme, WhatsApp Business). 3
+     anuncios (`ads-khrono/conjunto-2-intereses/`).
+  3. **"03 - Retargeting"** — usa el público personalizado de arriba en
+     vez de segmentación por intereses. Fecha de inicio corrida ~10 días
+     después de las otras dos (para dar tiempo a que la audiencia
+     acumule volumen real desde que se creó) — chequear tamaño de
+     audiencia en Públicos antes de esa fecha y correrla más si sigue
+     chica. 3 anuncios (`ads-khrono/conjunto-3-retargeting/`).
+- **Copys por conjunto** (texto principal / título / descripción / CTA):
+  - Conjunto 1: "¿Cuántos clientes se te escapan por no responder a
+    tiempo? Automatizamos tu WhatsApp para que respondas en segundos,
+    24/7." / "Deja de perder clientes por responder tarde" / "Agenda una
+    reunión gratis" / CTA **Más información**.
+  - Conjunto 2: "Mientras atiendes tu negocio, un asistente con IA
+    responde por ti en WhatsApp y agenda reuniones solo." / "Todo
+    respondido, sin mover un dedo" / "Conoce cómo automatizarlo" / CTA
+    **Más información**.
+  - Conjunto 3: "Todavía puedes agendar tu reunión gratis. Toma 2
+    minutos y te mostramos cómo automatizar tu negocio." / "Tu reunión,
+    a un clic de distancia" / "Agenda ahora, es gratis" / CTA
+    **Reservar**.
+  - CTA se decidió distinto por conjunto a propósito: "Reservar" implica
+    una acción de compromiso inmediato que no calza con audiencia fría
+    (el clic lleva primero al cuestionario de calificación, no a un
+    calendario directo) — "Más información" es más honesto para
+    conjuntos 1 y 2; "Reservar" sí calza en el 3 porque esa audiencia ya
+    conoce Khrono.
+- **Imágenes**: las 9 fotos base (generadas con ChatGPT/DALL·E a partir
+  de los prompts documentados en la conversación, no en este repo) están
+  organizadas en `~/Documents/Automatizaciones/ads-khrono/` por conjunto,
+  cada una con su versión `-texto.png` (overlay de texto agregado en
+  Canva por Rodolfo: Fraunces, `#F7F5F2` con una palabra de énfasis en
+  `#FF6B35`, ubicado en el tercio inferior para no tapar cara/producto).
+- **Pendiente crítico antes de publicar** (detectado en revisión, sin
+  resolver a la fecha):
+  1. **No existe una página de Facebook para Khrono.** El anuncio quedó
+     con la página personal de Rodolfo ("RodolfoMena") como placeholder
+     — hay que crear una página de Facebook de marca y reasignarla antes
+     de publicar de verdad, si no el anuncio se muestra como publicado
+     por Rodolfo, no por Khrono.
+  2. **Condiciones del servicio de generación de clientes potenciales de
+     Meta sin aceptar** en esa página — Meta bloquea publicar hasta
+     aceptarlas (botón "Ver Condiciones" en el panel de errores del
+     anuncio).
+- **Estado al cierre de la sesión del 7 ago**: quedó en medio de la
+  revisión final conjunto por conjunto (verificando presupuesto, fechas,
+  audiencia, imagen y copy de cada uno de los 9 anuncios) cuando se
+  cortó la sesión — no se alcanzó a terminar de revisar los conjuntos 2
+  y 3 ni a confirmar que los 9 anuncios individuales tengan la imagen y
+  el copy correctos. **Retomar revisando anuncio por anuncio antes de
+  publicar**, no asumir que quedó completo.
+- Recordatorio operativo: toda la campaña quedó en **borrador/pausada**
+  a propósito para que Rodolfo la revise — si se deja así, **no** va a
+  arrancar sola en la fecha programada (8 ago 05:00 quedó en el pasado
+  sin activarse). Para lanzar de verdad hay que resolver los pendientes
+  de arriba y luego activar manualmente cada conjunto (o pedirle a
+  Claude que lo haga).
+
 ## Pendientes (cosas por hacer)
 
 - **[Felipe, seguridad] Verificar dominio + activar "Enforce HTTPS" en
@@ -225,6 +308,13 @@ en esta sesión, queda anotado por transparencia.
 - **[Opcional] TikTok**: terminar el registro (quedó a mitad de camino, el
   código de verificación por correo expiró) y elegir usuario/nombre/bio de
   marca.
+- **[Meta Ads] Terminar de revisar y publicar la campaña.** Ver "Avance
+  (7-9 ago 2026)" arriba — falta: crear página de Facebook de marca para
+  Khrono (hoy usa la personal de Rodolfo como placeholder), aceptar las
+  Condiciones del servicio de clientes potenciales de Meta en esa
+  página, terminar de revisar los 9 anuncios uno por uno, y activar
+  manualmente los conjuntos (quedaron en borrador/pausados, no arrancan
+  solos).
 
 ### Avance (4 ago 2026, sesión de tarde) — permisos, link de agenda, favicon Safari
 
