@@ -259,17 +259,19 @@ CLP/mes**, arrancando con **$3.000 CLP/día por conjunto**.
   cada una con su versión `-texto.png` (overlay de texto agregado en
   Canva por Rodolfo: Fraunces, `#F7F5F2` con una palabra de énfasis en
   `#FF6B35`, ubicado en el tercio inferior para no tapar cara/producto).
-- **Pendiente crítico antes de publicar** (detectado en revisión, sin
-  resolver a la fecha):
-  1. **No existe una página de Facebook para Khrono.** El anuncio quedó
+- **Pendiente crítico antes de publicar** (único punto que sigue sin
+  resolver al 9 ago 2026 — los demás se corrigieron, ver avance de abajo):
+  1. **No existe una página de Facebook para Khrono.** El anuncio sigue
      con la página personal de Rodolfo ("RodolfoMena") como placeholder
-     — hay que crear una página de Facebook de marca y reasignarla antes
-     de publicar de verdad, si no el anuncio se muestra como publicado
-     por Rodolfo, no por Khrono.
+     en los 9 anuncios (confirmado de nuevo el 9 ago) — hay que crear
+     una página de Facebook de marca y reasignarla antes de publicar de
+     verdad, si no el anuncio se muestra como publicado por Rodolfo, no
+     por Khrono.
   2. **Condiciones del servicio de generación de clientes potenciales de
      Meta sin aceptar** en esa página — Meta bloquea publicar hasta
      aceptarlas (botón "Ver Condiciones" en el panel de errores del
-     anuncio).
+     anuncio). Depende del punto 1 (hay que aceptarlas desde la página
+     de marca real).
 - **Estado al cierre de la sesión del 7 ago**: quedó en medio de la
   revisión final conjunto por conjunto (verificando presupuesto, fechas,
   audiencia, imagen y copy de cada uno de los 9 anuncios) cuando se
@@ -277,6 +279,50 @@ CLP/mes**, arrancando con **$3.000 CLP/día por conjunto**.
   y 3 ni a confirmar que los 9 anuncios individuales tengan la imagen y
   el copy correctos. **Retomar revisando anuncio por anuncio antes de
   publicar**, no asumir que quedó completo.
+
+### Avance (9 ago 2026) — revisión profesional y corrección de bugs de segmentación
+
+Rodolfo pidió una revisión de la campaña "como especialista en marketing
+digital de Meta". Se encontraron y corrigieron 3 problemas reales en el
+borrador (verificados directo en Ads Manager, no solo por lo documentado
+arriba):
+
+- **Bug crítico de segmentación (ya corregido)**: los 3 conjuntos
+  (`01-Audiencia amplia`, `02-Audiencia intereses` y `03-Retargeting`)
+  tenían cargado el mismo público personalizado "Khrono - Visitantes sin
+  completar cuestionario" como filtro de "Incluir" — probablemente quedó
+  pegado al duplicar el conjunto de retargeting para crear los otros dos.
+  Efecto: los 3 conjuntos marcaban audiencia estimada "menos de 1.000" y
+  competían por el mismo puñado de gente, incluido el conjunto que debía
+  llegar a todo Chile en frío. Se sacó esa audiencia personalizada de
+  `01` y `02` (queda correctamente solo en `03-Retargeting`).
+  - `01-Audiencia amplia`: pasó de <1.000 a **16,9M-19,9M** de audiencia
+    estimada.
+  - `02-Audiencia intereses`: además no tenía ningún interés real cargado
+    pese al nombre y a lo documentado arriba (marketing digital,
+    automatización, pyme, WhatsApp Business nunca se habían aplicado). Se
+    cargaron los intereses reales disponibles en Meta: **Digital
+    marketing (marketing)**, **Automatización de marketing** y
+    **Pequeñas y medianas empresas (negocios y finanzas)**. "WhatsApp
+    Business" no existe como categoría de interés en Meta (solo devuelve
+    comportamientos genéricos de dispositivo móvil), así que no se forzó.
+- **Segmentación geográfica de `02-Audiencia intereses` acotada**: tenía
+  "Chile" (país completo) sin restricción, lo cual diluye el presupuesto
+  bajo de testeo en zonas de baja densidad de pymes. Se cambió a
+  **Región Metropolitana + Valparaíso (radio 40km desde la ciudad,
+  cubre Viña del Mar/Quilpué/Villa Alemana/Concón) + Concepción/Biobío
+  (radio 40km)**. Audiencia final: **5,3M-6,2M** (antes 16,9M-19,9M con
+  el bug de arriba corregido, o <1.000 con el bug sin corregir).
+- **"Compartir 20% del presupuesto entre conjuntos" había quedado
+  activado** pese a que se documentó arriba como "desmarcado a
+  propósito" — se volvió a desmarcar a nivel de campaña.
+- **Fechas de inicio verificadas, sin cambios**: `01` y `02` arrancan
+  juntos el **10 ago 2026 05:00 GMT-4** (no quedaron en el pasado como se
+  temía) y `03-Retargeting` el **20 ago 2026** — los 10 días de
+  diferencia siguen intactos tal como se planeó.
+- Sigue en **borrador**, no se publicó nada en esta sesión. Pendiente
+  real antes de publicar: el punto 1 de la lista de arriba (página de
+  Facebook de marca) — todo lo demás en la campaña ya quedó corregido.
 - Recordatorio operativo: toda la campaña quedó en **borrador/pausada**
   a propósito para que Rodolfo la revise — si se deja así, **no** va a
   arrancar sola en la fecha programada (8 ago 05:00 quedó en el pasado
