@@ -1115,8 +1115,15 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
       ]
     }
   ];
+  // El cuestionario de calificación queda desactivado a propósito: para
+  // tráfico frío de ads, esas 3 preguntas eran fricción antes de la acción
+  // que el anuncio prometía (agendar). El CTA ahora va directo al paso de
+  // contacto -> calendario; la calificación queda para la llamada. Se deja
+  // QUESTIONS con su definición completa por si se quiere reactivar (basta
+  // con volver ACTIVE_QUESTIONS = QUESTIONS).
+  var ACTIVE_QUESTIONS = [];
   var LETTERS = ['A', 'B', 'C', 'D'];
-  var TOTAL_STEPS = QUESTIONS.length + 1;
+  var TOTAL_STEPS = ACTIVE_QUESTIONS.length + 1;
   var WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxXMYm5Zos1PTH4U2VVcU5MzQGpjc3l_8wRtlOv8TUl6W2nglk5EQbCjoTVlZiBMnB0fA/exec';
 
   var overlay = document.getElementById('qualifyOverlay');
@@ -1141,8 +1148,8 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
   }
 
   function renderStep() {
-    if (step < QUESTIONS.length) {
-      var q = QUESTIONS[step];
+    if (step < ACTIVE_QUESTIONS.length) {
+      var q = ACTIVE_QUESTIONS[step];
       var html = '<h3 class="qualify-question">' + q.question + '</h3><div class="qualify-options">';
       q.options.forEach(function (opt, i) {
         var selected = answers[step] === i ? ' is-selected' : '';
@@ -1158,7 +1165,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
           renderStep();
         });
       });
-      progressLabel.textContent = 'Pregunta ' + (step + 1) + ' de ' + QUESTIONS.length;
+      progressLabel.textContent = 'Pregunta ' + (step + 1) + ' de ' + ACTIVE_QUESTIONS.length;
       nextBtn.textContent = 'Continuar';
       nextBtn.disabled = answers[step] === null;
     } else {
@@ -1203,9 +1210,9 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     var payload = {
       nombre: contact.name,
       whatsapp: contact.phone,
-      inversion: QUESTIONS[0].options[answers[0]] || '',
-      problema: QUESTIONS[1].options[answers[1]] || '',
-      urgencia: QUESTIONS[2].options[answers[2]] || '',
+      inversion: (QUESTIONS[0] && QUESTIONS[0].options[answers[0]]) || '',
+      problema: (QUESTIONS[1] && QUESTIONS[1].options[answers[1]]) || '',
+      urgencia: (QUESTIONS[2] && QUESTIONS[2].options[answers[2]]) || '',
       origen: window.location.href
     };
     // mode:'no-cors' no permite leer si la llamada tuvo éxito (Apps Script
@@ -1262,7 +1269,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
   });
 
   nextBtn.addEventListener('click', function () {
-    if (step < QUESTIONS.length) {
+    if (step < ACTIVE_QUESTIONS.length) {
       step++;
       renderStep();
     } else {
