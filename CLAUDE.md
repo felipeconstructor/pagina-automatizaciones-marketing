@@ -337,6 +337,39 @@ arriba):
   de arriba y luego activar manualmente cada conjunto (o pedirle a
   Claude que lo haga).
 
+### Avance (11 ago 2026) — página de Facebook de marca creada
+
+Se creó la página de Facebook de marca que faltaba (punto 1 del pendiente
+de arriba), vía Meta Business Suite (Claude en Chrome, sesión de Rodolfo).
+
+- **Nombre**: Khrono. **Categoría**: Empresa de software. **Presentación**:
+  "Automatizaciones con IA: chatbots 24/7, copiloto empresarial y marketing
+  IA para tu negocio."
+- **Portfolio comercial**: se creó dentro de **"Auto n"** — el portfolio
+  que contiene la cuenta publicitaria "Automatizaciones" (ID
+  `982447667818471`), la misma donde vive la campaña de Ads de Khrono. Se
+  eligió a propósito ese portfolio y no otros que administra Rodolfo
+  (Laorio, CRnexo, Prolig propiedades — negocios distintos) para no mezclar
+  el acceso administrativo.
+- **Foto de perfil: pendiente a propósito.** Rodolfo prefirió subirla él
+  mismo más tarde (imagen del robot/mascota de marca Khrono que ya tiene
+  preparada) en vez de que se subiera en esta sesión — no se generó ni se
+  guardó ningún archivo de imagen para esto en el repo ni en el disco.
+- **Reasignación de los 9 anuncios: hecha por Rodolfo mismo (11 ago 2026,
+  ~30h después de que la campaña empezó a correr)**. Se decidió hacer el
+  cambio de inmediato en vez de esperar: con el presupuesto tan bajo
+  (~$3.000 CLP/día por conjunto) la campaña casi no tenía aprendizaje
+  acumulado a las 30h, y el cambio de página siempre reinicia la fase de
+  aprendizaje del conjunto de anuncios y manda el anuncio a revisión de
+  nuevo (edit "significativo" para Meta) — mejor pagar ese costo temprano
+  que después de acumular más días de datos. Efecto esperado y aceptado:
+  los anuncios entran a revisión otra vez (pausa de minutos a horas) y los
+  likes/comentarios/shares de esos posts quedan en cero bajo la página
+  nueva. **Pendiente todavía**: confirmar que la revisión de Meta terminó
+  y los anuncios volvieron a estar activos, y aceptar las Condiciones del
+  servicio de clientes potenciales de Meta en la página **Khrono** (antes
+  bloqueado porque la página no existía).
+
 ## Pendientes (cosas por hacer)
 
 - **[Felipe, seguridad] Verificar dominio + activar "Enforce HTTPS" en
@@ -361,13 +394,14 @@ arriba):
 - **[Opcional] TikTok**: terminar el registro (quedó a mitad de camino, el
   código de verificación por correo expiró) y elegir usuario/nombre/bio de
   marca.
-- **[Meta Ads] Terminar de revisar y publicar la campaña.** Ver "Avance
-  (7-9 ago 2026)" arriba — falta: crear página de Facebook de marca para
-  Khrono (hoy usa la personal de Rodolfo como placeholder), aceptar las
-  Condiciones del servicio de clientes potenciales de Meta en esa
-  página, terminar de revisar los 9 anuncios uno por uno, y activar
-  manualmente los conjuntos (quedaron en borrador/pausados, no arrancan
-  solos).
+- **[Meta Ads] Cerrar la transición a la página de marca.** Ver "Avance
+  (11 ago 2026)" arriba — la página **Khrono ya existe** (portfolio "Auto
+  n") y los 9 anuncios ya fueron reasignados a ella por Rodolfo. Falta:
+  confirmar que pasaron la revisión de Meta post-cambio y volvieron a
+  estar activos, aceptar las Condiciones del servicio de clientes
+  potenciales de Meta en la página Khrono, y subir la foto de perfil
+  (Rodolfo la sube él mismo, imagen de marca ya elegida pero sin guardar
+  como archivo).
 
 ### Avance (4 ago 2026, sesión de tarde) — permisos, link de agenda, favicon Safari
 
@@ -544,6 +578,70 @@ a los assets sospechosos para comparar `Last-Modified` con la hora del
 también falla, asumir que es un bug real. Pedir recarga forzada
 (`Cmd+Shift+R` / cerrar y reabrir el navegador del celular) resuelve la
 mayoría de estos casos.
+
+## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
+
+Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la
+campaña de Meta Ads empezó a correr. El diagnóstico inicial fue "landing
+poco convincente", pero la causa real era un **bug técnico**, no de
+conversión/copy:
+
+- La Google Sheet de leads solo tenía 3 filas, **todas de antes del 10 ago**
+  (pruebas de Rodolfo mismo). Cero leads nuevos desde que entró tráfico
+  pagado real (confirmado por los `fbclid`/`utm_source=fb/ig` en la pestaña
+  "Visitas", 130+ filas).
+- Se probó el funnel completo a mano (Claude en Chrome): preguntas →
+  contacto → calendario, todo funcionaba visualmente sin errores. Pero la
+  llamada de red real al `WEBHOOK_URL` (Apps Script) devolvió **503** dos
+  veces seguidas, en dos cargas de página distintas.
+- **Causa raíz**: desde que se agregó el tracking de visitas (10 ago, ver
+  "Panel de leads en tiempo real" abajo), el mismo Apps Script recibe una
+  llamada `doPost` en **cada pageview**, no solo cuando alguien completa el
+  cuestionario. Con tráfico de ads llegando en ráfagas, esas llamadas
+  compiten por escribir en la misma Sheet — el registro de ejecuciones del
+  script (script.google.com → Ejecuciones) mostró llamadas normales de
+  1-2s mezcladas con picos de 7.5s y 10.2s. Cuando una ejecución se demora
+  así, el proxy de Apps Script le devuelve 503 al navegador del visitante
+  antes de que el script termine (aunque en el backend "eventualmente"
+  complete) — y como `submitLead()` usa `fetch` fire-and-forget con
+  `mode:'no-cors'` (sin leer la respuesta ni reintentar), cualquier lead
+  que cayera en una de esas ráfagas se perdía en silencio: el usuario veía
+  "¡Listo!" y pasaba al calendario sin que nadie se enterara de que el dato
+  nunca llegó a la Sheet.
+- Se descartó una pista falsa: el editor de Apps Script mostraba un banner
+  de "entorno Rhino obsoleto", pero Configuración del proyecto confirmó que
+  V8 sí está habilitado — el banner era un artefacto del panel de
+  depuración, no reflejaba el runtime real usado por `doPost`.
+
+**Fix aplicado** (Apps Script `Código.gs`, redesplegado como nueva versión
+de la misma implementación — el `WEBHOOK_URL` no cambió):
+- Todo el `doPost` envuelto en `try/catch`, siempre devuelve JSON válido en
+  vez de dejar una excepción sin capturar.
+- **Dedup de leads**: antes de escribir, compara nombre+whatsapp con la
+  última fila; si coincide y la fecha es de hace menos de 60s, no
+  duplica (devuelve `{ok:true, dedup:true}`).
+
+**Fix aplicado** (`index.html`):
+- El tracking de "visita" ahora se manda **una sola vez por sesión de
+  navegador** (`sessionStorage`), no en cada pageview — reduce
+  drásticamente la carga que compite con los leads por la misma cuota
+  compartida de Apps Script. El Pixel de Meta ya trackea `PageView` aparte,
+  así que no se pierde esa métrica.
+- `submitLead()` ahora manda el POST del lead **dos veces**, separado por
+  1.5s (`sendLead()` + `setTimeout`). Como `mode:'no-cors'` no permite leer
+  si la llamada tuvo éxito, no hay forma de "reintentar solo si falló" —
+  se manda dos veces siempre. Es un lead pagado: una fila duplicada
+  ocasional (que el dedup del backend ya filtra en la mayoría de los
+  casos) es un costo mucho menor que perder el dato.
+- Verificado en vivo (Claude en Chrome, tráfico real desde khrono.cl) que
+  la llamada al webhook ya no devuelve 503 después del fix.
+
+**Pendiente si se retoma**: confirmar en la Google Sheet que empiezan a
+llegar leads reales de la campaña activa, y revisar si el Google Calendar
+de `khrono.ai@gmail.com` tiene reservas que no quedaron reflejadas en la
+Sheet mientras el webhook estuvo fallando (el paso de agendar es
+independiente del webhook, así que pudo haber gente que agendó igual sin
+que quedara registrado como lead).
 
 ## Convenciones
 

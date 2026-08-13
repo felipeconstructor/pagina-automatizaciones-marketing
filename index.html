@@ -677,12 +677,15 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1046895985015967');
 fbq('track', 'PageView');
-fetch('https://script.google.com/macros/s/AKfycbxXMYm5Zos1PTH4U2VVcU5MzQGpjc3l_8wRtlOv8TUl6W2nglk5EQbCjoTVlZiBMnB0fA/exec', {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-  body: JSON.stringify({ tipo: 'visita', origen: window.location.href })
-});
+if (!sessionStorage.getItem('khronoVisitaRegistrada')) {
+  sessionStorage.setItem('khronoVisitaRegistrada', '1');
+  fetch('https://script.google.com/macros/s/AKfycbxXMYm5Zos1PTH4U2VVcU5MzQGpjc3l_8wRtlOv8TUl6W2nglk5EQbCjoTVlZiBMnB0fA/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ tipo: 'visita', origen: window.location.href })
+  });
+}
 </script>
 <noscript><img height="1" width="1" style="display:none"
 src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
@@ -1205,12 +1208,21 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
       urgencia: QUESTIONS[2].options[answers[2]] || '',
       origen: window.location.href
     };
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
+    // mode:'no-cors' no permite leer si la llamada tuvo éxito (Apps Script
+    // no expone su respuesta real en modo no-cors), así que se manda 2 veces
+    // separadas en el tiempo: es un lead pagado, vale más una fila duplicada
+    // ocasional que perder el dato si la primera llamada choca con un 503
+    // pasajero del webhook.
+    function sendLead() {
+      fetch(WEBHOOK_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+    }
+    sendLead();
+    setTimeout(sendLead, 1500);
     if (typeof fbq === 'function') fbq('track', 'Lead');
   }
 
