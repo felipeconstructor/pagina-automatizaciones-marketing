@@ -579,6 +579,85 @@ también falla, asumir que es un bug real. Pedir recarga forzada
 (`Cmd+Shift+R` / cerrar y reabrir el navegador del celular) resuelve la
 mayoría de estos casos.
 
+## Mini-agente de demo en el hero — "Haz tu agente gratis" (13 ago 2026)
+
+Rodolfo pidió reemplazar la tarjeta estática del hero ("Automatización en
+acción", un feed falso) por algo interactivo: que el visitante pueda
+probar un agente de IA de verdad, elegir el rubro de su negocio, chatear
+unos mensajes, y que después de una demo corta aparezca el CTA de agendar.
+Decisión explícita de Rodolfo: **IA real (Claude), no un guion
+preescrito** — el costo por demo es bajo y es más honesto mostrar
+exactamente lo que Khrono vende.
+
+- **Frontend** (`index.html`, sección hero + script al final del body):
+  - `#demoRubros`: 5 chips (Restaurante, Clínica dental, Inmobiliaria,
+    Ferretería/Tienda, Otro negocio) — mismos rubros que la prospección de
+    La Ligua/Cabildo. Al elegir uno se oculta el selector y aparece el
+    chat con un saludo inicial hardcodeado en el cliente (sin llamar a la
+    API todavía, para que la apertura sea instantánea).
+  - Cada mensaje del usuario dispara un POST a `WEBHOOK_URL` (mismo Apps
+    Script que ya usan leads/visitas) con
+    `{tipo:'demo_chat', rubro:'restaurante', historial:[...], mensaje:'...'}`
+    — **sin `mode:'no-cors'`** (a diferencia de los otros POST del sitio),
+    porque acá sí hace falta leer la respuesta real. Se verificó
+    empíricamente que Apps Script SÍ permite leer la respuesta en modo
+    `cors` normal para este caso (`res.type === 'cors'`, `res.ok === true`).
+  - Tope de **4 mensajes de usuario** (`MAX_USER_TURNS`): al llegar al
+    límite aparece `#demoPaywall`, un overlay absoluto sobre la tarjeta
+    (blur + texto + el mismo botón "Agendar reunión gratis" que ya
+    intercepta el script de calendario existente, sin código nuevo para
+    eso) y un link "Probar otro rubro" que resetea el widget.
+  - **Bug real encontrado y corregido**: los elementos con atributo
+    `hidden` (`#demoChat`, `#demoPaywall`, `#demoRubros`) no se ocultaban
+    porque sus propias reglas CSS (`.demo-chat { display: flex; }`, etc.)
+    tienen más especificidad que el estilo por defecto de `[hidden]` y lo
+    pisan. Se agregó `.demo-chat[hidden], .demo-paywall[hidden] { display:
+    none; }` explícito (mismo patrón para `.demo-rubros[hidden]`) — este
+    es un gotcha general de CSS, no específico de este proyecto, vale la
+    pena recordarlo si se agregan más elementos con `hidden` a futuro.
+- **Backend** (Apps Script `Código.gs`, mismo proyecto "leads"):
+  - `DEMO_RUBROS`: mapa `rubro clave -> system prompt` completo (persona,
+    tono, qué inventa, límites). El cliente solo manda la **clave** del
+    rubro (`'restaurante'`, no el prompt) — a propósito, para que no se
+    pueda usar el endpoint como proxy libre de Claude mandando un prompt
+    arbitrario desde devtools. Si la clave no existe en el mapa, responde
+    un mensaje fijo sin llamar a la API.
+  - `handleDemoChat(data)`: valida `historial.length <= 10` como límite
+    duro adicional server-side (defensa en profundidad además del tope de
+    4 en el cliente), llama a `https://api.anthropic.com/v1/messages` con
+    `model: 'claude-haiku-4-5-20251001'`, `max_tokens: 150` (respuestas
+    cortas a propósito, control de costo). La API key vive en
+    **Propiedades de secuencia de comandos** (`ANTHROPIC_API_KEY`), nunca
+    en el código ni en el cliente.
+  - **Autorización nueva requerida**: la primera vez que un Apps Script
+    llama a un dominio externo nuevo (`UrlFetchApp.fetch` a
+    `api.anthropic.com`), Google exige una re-autorización de scope
+    (`script.external_request`) — Apps Script normalmente muestra un
+    diálogo de consentimiento automático al ejecutar desde el editor,
+    pero si la llamada está dentro de un `try/catch` propio, la excepción
+    de autorización se atrapa silenciosamente y el diálogo nunca aparece.
+    Hubo que crear una función temporal sin try/catch
+    (`UrlFetchApp.fetch(...)` pelado) para forzar el diálogo, aprobarlo, y
+    recién ahí las llamadas dentro de `handleDemoChat` empezaron a
+    funcionar. **Problema aparte que apareció en el camino**: el flujo de
+    consentimiento de Google falló con 403 varias veces porque Chrome
+    tenía más de una cuenta de Google logueada y el link abría el
+    consentimiento con `authuser=2` (cuenta equivocada) — se resolvió
+    editando la URL a mano (`authuser=0`) para forzar la cuenta correcta
+    (`rodolfomena051@gmail.com`). Si se vuelve a tocar este script y hay
+    que re-autorizar algo, tener esto presente antes de asumir que el
+    proyecto está mal configurado.
+- **Verificado en producción**: conversación completa de punta a punta
+  (rubro → 4 intercambios con respuestas contextuales reales de Claude →
+  paywall → botón abre el modal de agendar existente) probada en
+  `khrono.cl` antes de dar la feature por terminada.
+- **Pendiente si se retoma**: no hay rate-limiting real por IP/sesión más
+  allá del tope de 4 mensajes del lado del cliente y el límite de 10 de
+  historial del lado del servidor — si el tráfico crece mucho o alguien
+  abusa deliberadamente del endpoint, conviene agregar algo más estricto
+  (por ejemplo, throttling por IP en el propio Apps Script o mover esto a
+  un servicio con mejor control de cuota).
+
 ## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
 
 Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la

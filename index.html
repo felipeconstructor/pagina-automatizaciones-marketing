@@ -324,6 +324,81 @@ body::before {
 .progress-fill { height: 100%; width: 62%; background: linear-gradient(90deg, var(--accent-2), var(--accent)); border-radius: 999px; }
 .widget-caption { text-align: center; color: var(--muted-2); font-size: 0.74rem; margin-top: 14px; font-style: italic; text-shadow: 0 1px 3px rgba(0,0,0,0.9), 0 2px 8px rgba(0,0,0,0.7); }
 
+/* ---------- Demo de agente (hero) ---------- */
+.demo-rubros { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.demo-rubros[hidden] { display: none; }
+.demo-rubro-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12);
+  color: var(--ink); font-size: 0.86rem; font-weight: 600;
+  cursor: pointer; transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+.demo-rubro-btn:hover { background: rgba(255,178,32,0.1); border-color: rgba(255,178,32,0.4); transform: translateY(-1px); }
+.demo-rubro-emoji { font-size: 1rem; }
+
+.demo-chat { display: flex; flex-direction: column; }
+.demo-chat[hidden], .demo-paywall[hidden] { display: none; }
+.demo-messages {
+  display: flex; flex-direction: column; gap: 10px;
+  height: 240px; overflow-y: auto; padding: 4px 2px 8px;
+  scrollbar-width: thin;
+}
+.demo-messages::-webkit-scrollbar { width: 5px; }
+.demo-messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.14); border-radius: 999px; }
+.demo-msg {
+  max-width: 84%; padding: 9px 13px; border-radius: 14px;
+  font-size: 0.85rem; line-height: 1.42;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  animation: demo-msg-in 220ms ease;
+}
+@keyframes demo-msg-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.demo-msg.agent { align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-bottom-left-radius: 4px; }
+.demo-msg.user { align-self: flex-end; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink); border-bottom-right-radius: 4px; text-shadow: none; font-weight: 600; }
+.demo-msg.demo-typing { display: flex; align-items: center; gap: 4px; padding: 12px 14px; }
+.demo-msg.demo-typing span { width: 5px; height: 5px; border-radius: 50%; background: var(--muted-2); animation: demo-typing-bounce 1.1s ease-in-out infinite; }
+.demo-msg.demo-typing span:nth-child(2) { animation-delay: 0.15s; }
+.demo-msg.demo-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes demo-typing-bounce { 0%, 60%, 100% { opacity: 0.35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+.demo-input-row { display: flex; gap: 8px; margin-top: 4px; }
+.demo-input {
+  flex: 1; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 12px; padding: 11px 14px; color: var(--ink); font-size: 0.86rem; font-family: inherit;
+}
+.demo-input::placeholder { color: var(--muted-2); }
+.demo-input:focus { outline: none; border-color: var(--accent-2); }
+.demo-input:disabled { opacity: 0.5; }
+.demo-send {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 12px; border: none; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink);
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+.demo-send:hover:not(:disabled) { transform: scale(1.05); }
+.demo-send:disabled { opacity: 0.4; cursor: default; }
+.demo-send svg { width: 17px; height: 17px; }
+
+.demo-paywall {
+  position: absolute; inset: 0; z-index: 5; border-radius: 20px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  padding: 28px; gap: 12px;
+  background: rgba(10,9,8,0.86); backdrop-filter: blur(6px);
+  animation: demo-msg-in 260ms ease;
+}
+.demo-paywall-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 4px;
+}
+.demo-paywall-icon svg { width: 22px; height: 22px; }
+.demo-paywall h3 { font-family: "Fraunces", Georgia, serif; font-size: 1.28rem; font-weight: 600; }
+.demo-paywall p { color: var(--muted); font-size: 0.88rem; line-height: 1.5; max-width: 320px; }
+.demo-paywall .cta-primary { margin-top: 4px; }
+.demo-retry { background: none; border: none; color: var(--muted-2); font-size: 0.8rem; text-decoration: underline; cursor: pointer; margin-top: 2px; }
+.demo-retry:hover { color: var(--ink); }
+
 /* ---------- Section head ---------- */
 .section-head { max-width: 640px; }
 .services-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
@@ -753,28 +828,43 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     </div>
 
     <div class="widget-wrap">
-      <div class="widget-card">
+      <div class="widget-card" id="demoCard">
         <div class="widget-head">
           <div class="widget-head-left">
             <span class="widget-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></span>
             <div>
-              <div class="widget-title">Automatización en acción</div>
-              <div class="widget-sub">Flujo de atención — ejemplo</div>
+              <div class="widget-title">Haz tu agente gratis</div>
+              <div class="widget-sub" id="demoSub">Elige el rubro de tu negocio</div>
             </div>
           </div>
           <span class="widget-live"><span class="dot"></span>En línea</span>
         </div>
-        <div class="feed">
-          <div class="feed-item"><span class="feed-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg></span><span class="feed-text">Tu WhatsApp responde solo</span><span class="feed-time">09:41</span></div>
-          <div class="feed-item"><span class="feed-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></span><span class="feed-text">IA califica y responde en 6 seg</span><span class="feed-time">09:41</span></div>
-          <div class="feed-item"><span class="feed-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M9 16l2 2 4-4"/></svg></span><span class="feed-text">Reunión agendada — mañana 10:00</span><span class="feed-time">09:42</span></div>
-          <div class="feed-item"><span class="feed-check pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span><span class="feed-text">Recordatorio automático</span><span class="feed-time">programado</span></div>
+
+        <div class="demo-rubros" id="demoRubros">
+          <button type="button" class="demo-rubro-btn" data-rubro="restaurante"><span class="demo-rubro-emoji">🍽️</span>Restaurante</button>
+          <button type="button" class="demo-rubro-btn" data-rubro="clinica"><span class="demo-rubro-emoji">🦷</span>Clínica dental</button>
+          <button type="button" class="demo-rubro-btn" data-rubro="inmobiliaria"><span class="demo-rubro-emoji">🏠</span>Inmobiliaria</button>
+          <button type="button" class="demo-rubro-btn" data-rubro="ferreteria"><span class="demo-rubro-emoji">🛠️</span>Ferretería / Tienda</button>
+          <button type="button" class="demo-rubro-btn" data-rubro="otro"><span class="demo-rubro-emoji">💬</span>Otro negocio</button>
         </div>
-        <div class="widget-progress">
-          <div class="progress-label"><span>Sistema trabajando ahora</span><span>62%</span></div>
-          <div class="progress-track"><div class="progress-fill"></div></div>
+
+        <div class="demo-chat" id="demoChat" hidden>
+          <div class="demo-messages" id="demoMessages"></div>
+          <form class="demo-input-row" id="demoForm">
+            <input class="demo-input" id="demoInput" type="text" placeholder="Escribe como si fueras un cliente..." autocomplete="off" maxlength="300">
+            <button class="demo-send" id="demoSend" type="submit" aria-label="Enviar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          </form>
         </div>
-        <p class="widget-caption">Así se ve un lead real pasando por el sistema.</p>
+
+        <p class="widget-caption" id="demoCaption">Es una IA real respondiendo — así atendería a tus clientes.</p>
+
+        <div class="demo-paywall" id="demoPaywall" hidden>
+          <div class="demo-paywall-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
+          <h3>¿Viste lo rápido que responde?</h3>
+          <p>Así atendería a tus clientes 24/7, todos los días, sin que nadie de tu equipo esté pendiente. Agenda una reunión gratis y armamos el tuyo, a la medida de tu negocio.</p>
+          <a class="cta-primary" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener">Agendar reunión gratis</a>
+          <button class="demo-retry" id="demoRetry" type="button">Probar otro rubro</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1278,6 +1368,148 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
       if (typeof fbq === 'function') fbq('track', 'Schedule');
       renderFinal();
     }
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var RUBROS = {
+    restaurante: { label: 'Restaurante', saludo: '¡Hola! 👋 Soy el asistente de Restaurante El Fogón. ¿Quieres reservar una mesa, ver el menú o consultar un horario?' },
+    clinica: { label: 'Clínica dental', saludo: '¡Hola! 👋 Soy el asistente de Clínica Dental Sonrisa. ¿Quieres agendar una hora, consultar valores o resolver una urgencia?' },
+    inmobiliaria: { label: 'Inmobiliaria', saludo: '¡Hola! 👋 Soy el asistente de Inmobiliaria Costanera. ¿Buscas arrendar, comprar o agendar una visita a una propiedad?' },
+    ferreteria: { label: 'Ferretería / Tienda', saludo: '¡Hola! 👋 Soy el asistente de Ferretería El Tornillo. ¿Consultas stock, precio de algún producto o el horario de la tienda?' },
+    otro: { label: 'Tu negocio', saludo: '¡Hola! 👋 Soy el asistente de IA de tu negocio. Cuéntame qué necesitas y te muestro cómo respondería.' }
+  };
+  var DEMO_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxXMYm5Zos1PTH4U2VVcU5MzQGpjc3l_8wRtlOv8TUl6W2nglk5EQbCjoTVlZiBMnB0fA/exec';
+  var MAX_USER_TURNS = 4;
+
+  var rubrosEl = document.getElementById('demoRubros');
+  var chatEl = document.getElementById('demoChat');
+  var messagesEl = document.getElementById('demoMessages');
+  var formEl = document.getElementById('demoForm');
+  var inputEl = document.getElementById('demoInput');
+  var sendBtn = document.getElementById('demoSend');
+  var subEl = document.getElementById('demoSub');
+  var captionEl = document.getElementById('demoCaption');
+  var paywallEl = document.getElementById('demoPaywall');
+  var retryBtn = document.getElementById('demoRetry');
+  if (!rubrosEl) return;
+
+  var currentRubroKey = null;
+  var chatHistory = [];
+  var userTurns = 0;
+  var sending = false;
+
+  function addMessage(role, text) {
+    var div = document.createElement('div');
+    div.className = 'demo-msg ' + (role === 'user' ? 'user' : 'agent');
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function addTyping() {
+    var div = document.createElement('div');
+    div.className = 'demo-msg agent demo-typing';
+    div.id = 'demoTypingIndicator';
+    div.innerHTML = '<span></span><span></span><span></span>';
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function removeTyping() {
+    var el = document.getElementById('demoTypingIndicator');
+    if (el) el.remove();
+  }
+
+  function startRubro(key) {
+    var rubro = RUBROS[key];
+    if (!rubro) return;
+    currentRubroKey = key;
+    chatHistory = [];
+    userTurns = 0;
+    messagesEl.innerHTML = '';
+    rubrosEl.hidden = true;
+    chatEl.hidden = false;
+    paywallEl.hidden = true;
+    subEl.textContent = rubro.label + ' — demo en vivo';
+    captionEl.textContent = 'Es una IA real respondiendo — así atendería a tus clientes.';
+    addMessage('agent', rubro.saludo);
+    chatHistory.push({ role: 'assistant', content: rubro.saludo });
+    inputEl.disabled = false;
+    inputEl.value = '';
+    inputEl.focus();
+  }
+
+  function showPaywall() {
+    paywallEl.hidden = false;
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+  }
+
+  function resetDemo() {
+    rubrosEl.hidden = false;
+    chatEl.hidden = true;
+    paywallEl.hidden = true;
+    subEl.textContent = 'Elige el rubro de tu negocio';
+    captionEl.textContent = 'Es una IA real respondiendo — así atendería a tus clientes.';
+  }
+
+  rubrosEl.querySelectorAll('.demo-rubro-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      startRubro(btn.getAttribute('data-rubro'));
+    });
+  });
+
+  if (retryBtn) retryBtn.addEventListener('click', resetDemo);
+
+  formEl.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (sending || !currentRubroKey) return;
+    var text = inputEl.value.trim();
+    if (!text) return;
+    sending = true;
+    inputEl.value = '';
+    inputEl.disabled = true;
+    sendBtn.disabled = true;
+    addMessage('user', text);
+    var historialPrevio = chatHistory.slice();
+    chatHistory.push({ role: 'user', content: text });
+    userTurns++;
+    addTyping();
+
+    fetch(DEMO_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        tipo: 'demo_chat',
+        rubro: currentRubroKey,
+        historial: historialPrevio,
+        mensaje: text
+      })
+    }).then(function (res) { return res.json(); })
+      .then(function (data) {
+        removeTyping();
+        var reply = (data && data.reply) ? data.reply : 'Uy, se me cortó la conexión. Prueba de nuevo en un segundo.';
+        addMessage('agent', reply);
+        chatHistory.push({ role: 'assistant', content: reply });
+        sending = false;
+        if (userTurns >= MAX_USER_TURNS) {
+          setTimeout(showPaywall, 900);
+        } else {
+          inputEl.disabled = false;
+          sendBtn.disabled = false;
+          inputEl.focus();
+        }
+      })
+      .catch(function () {
+        removeTyping();
+        addMessage('agent', 'Uy, se me cortó la conexión. Prueba de nuevo en un segundo.');
+        sending = false;
+        inputEl.disabled = false;
+        sendBtn.disabled = false;
+      });
   });
 })();
 </script>
