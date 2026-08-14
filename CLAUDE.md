@@ -756,6 +756,50 @@ más números de espaciado) — eligió **menos cajas**. Cambios, solo en
   tuvo más chance de funcionar que en una pestaña ya existente — pero no
   asumir que va a funcionar, seguir confirmando con `window.innerWidth`.
 
+## Hero menos saturado, servicios apilados y caso de éxito Prolig (14 ago 2026)
+
+Rodolfo mandó capturas reales de su iPhone del hero — se veía "muy saturado".
+Cambios directos, sin re-verificación adicional en dispositivo real esta vez
+(se probó con `python3 -m http.server` local + Claude en Chrome a ~500px de
+ancho, suficiente para confirmar el layout mobile):
+
+- **Hero**: se sacó el bloque de 3 stats (`24/7` / `<10s` / `0 leads sin
+  seguimiento`) que iba debajo del botón "Agendar reunión gratis" —
+  eran datos genéricos sin respaldo real, además de saturar. El
+  mini-agente de demo (`.widget-wrap`) vuelve a aparecer **debajo** del
+  texto principal en mobile: se sacó `.widget-wrap { order: -1; }` del
+  media query de 900px (esa regla lo ponía primero, agregada el 13 ago
+  y ahora revertida a pedido explícito). En desktop sigue side-by-side
+  (grid 2 columnas), eso no se tocó.
+- **Servicios**: pasaron de carrusel horizontal (`overflow-x: auto` +
+  scroll-snap + botones prev/next + hint de swipe) a un **grid que
+  crece hacia abajo** — `.services-grid` con `repeat(3, 1fr)` en
+  desktop, `repeat(2, 1fr)` a los 900px, `1fr` a los 560px. Se borraron
+  `.services-scroll-wrap`, `.scroll-nav`, `.scroll-hint` y su JS (ya no
+  hay nada que scrollear). Las descripciones de cada tarjeta se
+  acortaron a 1-2 líneas (antes eran párrafos largos) — el `card-meta`
+  (implementación/ideal para) se dejó igual, no era lo que saturaba.
+- **Sección nueva "Caso real" (`#caso-exito`)**, entre servicios y
+  "Así se pierden clientes hoy": cuenta que Prolig (la corredora de
+  propiedades de Felipe, cofundador) fue el primer negocio en usar el
+  sistema antes de vendérselo a nadie más. **Reutiliza datos ya
+  validados** de la sección "Quiénes somos" (90% de procesos
+  automatizados, ahorro equivalente a 2 sueldos) en vez de inventar
+  métricas nuevas sin confirmar — Rodolfo confirmó explícitamente que
+  Prolig es esa misma corredora antes de escribir el texto. Sin
+  imagen/logo (Rodolfo no tenía uno a mano), estilo consistente con
+  `.contrast`/`.why` (secciones de solo texto). Reutiliza el
+  componente visual `.stat-pill/.stat-num/.stat-label` que quedó libre
+  al sacarlo del hero, en vez de duplicar CSS — en mobile (<560px) esos
+  pills ya tenían el estilo "sin caja, borde izquierdo" del ajuste de
+  densidad del 13 ago, así que la nueva sección hereda esa consistencia
+  gratis.
+- **Pendiente si se retoma**: no se verificó en un iPhone real después
+  de este cambio (solo emulación ~500px vía Claude en Chrome) —
+  confirmar con Rodolfo que el hero ya no se siente saturado y que el
+  grid de servicios se ve bien en su celular antes de darlo por
+  cerrado del todo.
+
 ## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
 
 Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la
