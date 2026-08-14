@@ -756,6 +756,124 @@ más números de espaciado) — eligió **menos cajas**. Cambios, solo en
   tuvo más chance de funcionar que en una pestaña ya existente — pero no
   asumir que va a funcionar, seguir confirmando con `window.innerWidth`.
 
+## Auditoría de seguridad completa (14 ago 2026)
+
+Rodolfo pidió una auditoría completa para descartar riesgos de hackeo/robo
+de datos. Se revisó todo lo que compone khrono.cl: `index.html` (estático,
+GitHub Pages), el backend real en Apps Script (`Código.gs`, proyecto
+"leads", no vive en este repo git), la Google Sheet de leads, el
+despliegue del webhook, y el estado de HTTPS/dominio.
+
+### Hallazgos corregidos en esta sesión (Código.gs, redesplegado como
+### Versión 7, mismo `WEBHOOK_URL`)
+
+1. **Fuga de errores internos al cliente**: el `catch` de `doPost`
+   devolvía `{ok:false, error: String(err)}` a quien sea que llamara el
+   webhook — cualquiera podía provocar errores a propósito y aprender
+   detalles internos. Ahora el error se loggea server-side
+   (`Logger.log`) y al cliente solo se le devuelve `{ok:false}`.
+2. **Inyección de fórmulas en Google Sheets (formula/CSV injection)**:
+   `doPost` escribía `data.nombre`, `data.inversion`, `data.problema`,
+   `data.urgencia`, `data.origen` directo en celdas sin sanitizar. Como
+   el webhook es público (la URL está en el código fuente de
+   `index.html`, visible para cualquiera), alguien podía mandar un POST
+   directo (sin pasar por la landing) con un valor tipo
+   `=HYPERLINK("http://evil.com";"click")` y quedaba vivo en la Sheet —
+   riesgo real si alguien del equipo abre la Sheet y hace clic, o si la
+   fórmula usa algo como `IMPORTXML` para exfiltrar datos. Se agregó
+   `sanitizeCell()`: antepone un apóstrofe a cualquier valor que empiece
+   con `=`, `+`, `-` o `@` antes de escribirlo, forzándolo a texto
+   plano. **A propósito no se aplicó a `data.whatsapp`** — ese campo ya
+   tenía protección propia vía `setNumberFormat('@')` en la columna, y
+   aplicarle el mismo prefijo habría roto números reales que empiezan
+   con `+` (formato internacional `+569...`).
+3. **Sin tope de gasto en la demo de IA**: no había ningún límite más
+   allá del tope de 4 mensajes del lado del cliente (fácil de saltar
+   recargando la página) y el límite de 10 mensajes de historial del
+   lado del servidor. Se agregó `checkGlobalDemoLimit()`: un tope
+   **global** (no por visitante — Apps Script no expone la IP de quien
+   llama, así que no se puede limitar por IP) de 40 mensajes a la API de
+   Claude cada 10 minutos, usando `CacheService`. No impide que una sola
+   persona abuse mandando requests directo al webhook, pero pone un
+   techo duro al gasto total posible si el tráfico se dispara o alguien
+   ataca el endpoint en loop.
+
+Los 3 fixes se verificaron en producción después del redeploy: `doGet`
+responde bien (`curl`), y el chat del hero respondió con contenido real
+de Claude en una prueba end-to-end en `khrono.cl` (Claude en Chrome).
+**Nota para quien retome esto**: probar el webhook con `curl -X POST`
+falla con un error genérico de Google Drive a menos que se agreguen
+`--post302 --post303` — y aun así puede fallar, porque Apps Script
+maneja el redirect 302 a la URL de ejecución real de forma particular
+que `curl` no siempre replica bien. La forma confiable de probar es
+`fetch()` real en un navegador (como hace la propia landing), no `curl`.
+
+### Hallazgos que ya estaban bien (verificado, no se tocó nada)
+
+- **Sin XSS**: todo el contenido dinámico se inserta con
+  `textContent` (mensajes del chat, incluida la respuesta de la IA) o
+  pasa por `escapeHtml()` (el único campo que se reinyecta como HTML es
+  `contact.name` en la pantalla de éxito del cuestionario, y ya estaba
+  bien escapado).
+- **Sin secretos expuestos**: se revisó `index.html` completo y todo el
+  historial de git — no hay API keys ni tokens hardcodeados en ningún
+  commit.
+- **`ANTHROPIC_API_KEY`** vive en Propiedades de secuencia de comandos
+  de Apps Script, nunca llega al cliente ni al código fuente.
+- **El demo no es un proxy libre de Claude**: `handleDemoChat` solo
+  acepta una clave de rubro de una lista cerrada de 5 (`restaurante`,
+  `clinica`, `inmobiliaria`, `ferreteria`, `otro`) — el system prompt
+  real nunca lo manda el cliente, así que no se puede usar el endpoint
+  para generar contenido arbitrario con un prompt propio.
+- **Todos los `target="_blank"` tienen `rel="noopener"`** (protegidos
+  contra tabnabbing). Sin mixed content real (el único `http://` en el
+  archivo es el namespace XML de un SVG decorativo).
+- **La Google Sheet de leads es privada**: verificado directo vía API
+  de Google Drive (`get_file_permissions`) — el único permiso listado es
+  el de Rodolfo como owner, no está compartida ni con "cualquiera con el
+  link" ni con ninguna otra cuenta.
+- **Un solo despliegue activo del Apps Script**: se revisó "Gestionar
+  implementaciones" — no hay URLs viejas/abandonadas con código
+  desactualizado todavía accesibles; las versiones archivadas solo
+  existen como historial, no como endpoints separados. `Ejecutar como:
+  Yo (rodolfomena051@gmail.com)` / `Quién tiene acceso: Cualquier
+  usuario` es la configuración correcta y necesaria para que el fetch
+  desde la landing funcione sin login — no es una mala configuración.
+- **Meta Pixel** no manda ningún dato personal (nombre/teléfono) en los
+  eventos `Lead`/`Schedule`/`PageView` — son triggers sin payload
+  custom.
+
+### Pendiente real — no se puede arreglar desde el código (14 ago 2026)
+
+**El hallazgo más serio de toda la auditoría sigue siendo el mismo
+bloqueado hace semanas**: `http://khrono.cl` (sin S) sigue sirviendo la
+página completa **en texto plano**, sin redirigir a HTTPS
+(`protected_domain_state: "unverified"`, `https_enforced: false`,
+confirmado de nuevo vía API de GitHub y `curl -I` el 14 ago). Esto
+importa para la auditoría porque un atacante en posición de
+intermediario (wifi pública, router comprometido) podría **inyectar
+JavaScript malicioso en la página mientras viaja sin cifrar** y desde
+ahí robar cualquier dato que el visitante ingrese o redirigir los
+botones de agendar/WhatsApp a un sitio de phishing — es el único
+hallazgo de esta auditoría que compromete la integridad de la página
+misma, no solo del backend. Depende 100% de que Felipe
+(`felipeconstructor`, único Admin del repo) complete la verificación de
+dominio + "Enforce HTTPS" en GitHub Pages (pasos detallados en la
+sección "Estado — dominio propio" más abajo) — Rodolfo tiene rol Write
+pero no Admin, confirmado de nuevo hoy vía API
+(`admin:false`).
+
+**Camino alternativo que no depende de Felipe**: Cloudflare ya está
+delante del DNS de `khrono.cl` (ver "Estado — dominio propio"). Si
+Rodolfo tiene acceso al dashboard de Cloudflare de este dominio, se
+puede forzar HTTPS ahí mismo (regla "Always Use HTTPS" o una Page Rule)
+sin depender de que GitHub verifique el dominio — no se intentó en esta
+sesión porque no se confirmó el acceso a Cloudflare. Cloudflare también
+permitiría agregar headers de seguridad (`Strict-Transport-Security`,
+`Content-Security-Policy`) que GitHub Pages no deja configurar
+directamente y que hoy no están presentes en ninguna respuesta del
+sitio.
+
 ## Hero menos saturado, servicios apilados y caso de éxito Prolig (14 ago 2026)
 
 Rodolfo mandó capturas reales de su iPhone del hero — se veía "muy saturado".
