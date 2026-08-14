@@ -800,6 +800,51 @@ ancho, suficiente para confirmar el layout mobile):
   grid de servicios se ve bien en su celular antes de darlo por
   cerrado del todo.
 
+## Caso de éxito Prolig: rediseño más visual, movido antes de servicios (14 ago 2026, más tarde)
+
+Rodolfo vio la sección "Caso real" recién publicada y pidió que fuera más
+llamativa — "que la gente se detenga a verlo" — y que se le diera más
+énfasis que a servicios, con más imágenes, letras más grandes y menos
+descripción.
+
+- **Posición**: la sección `#caso-exito` se movió de entre
+  servicios/contrast a **justo después del `</header>`**, antes de
+  `#servicios` — ahora `#servicios` queda más abajo en el orden de la
+  página (hero → caso de éxito → servicios → problema → quiénes somos →
+  CTA final).
+- **Imágenes reales, no gráficos genéricos**: Rodolfo compartió que
+  Prolig tiene sitio propio y real en **prolig.cl** ("esa es la marca,
+  ahí ve tú cómo la incorporas") — se capturaron 2 screenshots reales
+  con Claude en Chrome (`assets/case-prolig-hero.jpg`: el hero real de
+  prolig.cl con logo "PRO LIG" y tagline; `assets/case-prolig-pasos.jpg`:
+  su sección "Solo tres pasos" en fondo verde oscuro, que casualmente
+  combina bien con la paleta oscura de Khrono) y se comprimieron con
+  `sips` a ~100-115KB cada una. Se muestran lado a lado (apiladas en
+  mobile, breakpoint 700px) dentro de `.case-shot`, con badge tipo
+  `.card-badge` superpuesto ("PROLIG.CL — CLIENTE REAL" / "Así de simple
+  queda para el cliente"). Se agregó un link "Visitar prolig.cl"
+  (`target="_blank"`) como prueba adicional de que es un cliente real.
+- **Tipografía mucho más grande**: `.case-title` usa el mismo tratamiento
+  Fraunces que `.section-title` pero con `clamp(2.2rem, 5vw, 3.4rem)`
+  (más grande que el resto de headers de sección) y **texto centrado**
+  (`.case-study { text-align: center; }`, único caso en el sitio — todas
+  las demás secciones son left-aligned). Los 2 stats (`90%` / `2
+  sueldos`) usan `.case-stat-num` con `clamp(3rem, 7vw, 4.6rem)` — mucho
+  más grande que el `.stat-num` original (1.7rem) que se usaba en el
+  hero — para que sean el elemento que "detiene" al visitante. En mobile
+  angosto (~500px) el `flex-wrap` de `.case-stats-row` los apila uno
+  debajo del otro automáticamente, sin media query adicional.
+- **Menos texto**: se bajó de 2 párrafos + 2 stat-pill con descripción
+  larga a **1 sola línea de subtítulo** (`.case-sub`) + 2 stats con
+  label corto (una línea). El copy explicativo largo sobre qué se
+  automatizó se sacrificó a propósito por impacto visual, a pedido
+  explícito de Rodolfo.
+- Verificado visualmente en 3 anchos distintos vía Claude en Chrome
+  (servidor local `python3 -m http.server`, ya que `file://` no es
+  navegable con estas herramientas): ~1280px (desktop, 2 imágenes lado a
+  lado), ~606px y ~500px (imágenes apiladas, stats apilados en el más
+  angosto). Sin verificar en dispositivo real.
+
 ## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
 
 Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la
