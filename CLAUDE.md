@@ -721,6 +721,41 @@ escritorio, nunca restando:
 - Sigue sin verificarse en dispositivo real — pedirle a Rodolfo que
   confirme con capturas nuevas.
 
+**Segunda corrección (13 ago 2026, aún más tarde)**: con screenshots
+nuevas del iPhone real de Rodolfo, confirmó que los espacios de la
+corrección anterior sí se aplicaron (ya no hay elementos tocándose), pero
+seguía sintiendo la página "apretada". Diagnóstico correcto esta vez: no
+era un problema de margen entre bloques, sino de **densidad visual** —
+demasiados elementos con borde/fondo tipo "caja" apilados uno tras otro
+(el widget, el pill, cada stat, cada tarjeta de servicio), y el carrusel
+de tarjetas de servicio mostraba un pedazo cortado de la siguiente
+tarjeta en el borde de la pantalla, que se ve inconcluso. Se le preguntó
+a Rodolfo la dirección a seguir (menos cajas vs. acortar contenido vs.
+más números de espaciado) — eligió **menos cajas**. Cambios, solo en
+`@media (max-width: 560px)`, sin tocar desktop:
+- `.stat-pill`: se le sacó `border`/`background`/`border-radius`, queda
+  como texto plano con un borde izquierdo de 3px color acento
+  (`border-left: 3px solid var(--accent)`) en vez de una caja completa.
+  `.stat-row` gap subido a 26px para compensar la falta del padding
+  interno de la caja.
+- `.service-card`: `flex-basis` pasó de un valor fijo (258px, dejaba
+  ~80px de la siguiente tarjeta cortados a la vista) a
+  `calc(100% - 44px)` — cada swipe del carrusel ahora muestra **una
+  tarjeta completa** por pantalla, con un peek consistente y prolijo del
+  borde de la siguiente en vez de un corte abrupto. `.services-scroll`
+  gap bajado a 16px para acompañar.
+- **Esta vez sí se verificó visualmente**: por primera vez en la sesión,
+  `resize_window` (Claude en Chrome) funcionó — pero de forma poco
+  confiable (no siempre respeta el ancho exacto pedido, a veces no
+  cambia nada, a veces cambia en una llamada posterior sin patrón claro).
+  Se logró un viewport real de ~500px de ancho (confirmado con
+  `window.innerWidth` vía JS) y con eso se pudo confirmar visualmente
+  que los stats quedaron sin caja y la tarjeta de servicio se ve completa
+  sin corte. Si se necesita verificar mobile de nuevo, intentar
+  `resize_window` en una pestaña recién creada (antes de navegar) — ahí
+  tuvo más chance de funcionar que en una pestaña ya existente — pero no
+  asumir que va a funcionar, seguir confirmando con `window.innerWidth`.
+
 ## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
 
 Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la
