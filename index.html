@@ -263,7 +263,6 @@ body::before {
 .cta-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,107,53,0.42); }
 .cta-note { color: var(--muted-2); font-size: 0.82rem; max-width: 200px; line-height: 1.4; }
 
-.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 46px; max-width: 540px; }
 .stat-pill { border: 1px solid var(--card-line); background: linear-gradient(180deg, var(--card-hi), var(--card)); border-radius: 16px; padding: 18px 14px; }
 .stat-num { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-variation-settings: "opsz" 40; color: var(--accent); font-size: 1.7rem; font-variant-numeric: tabular-nums; display: block; letter-spacing: 0.01em; }
 .stat-label { color: var(--muted); font-size: 0.74rem; line-height: 1.4; margin-top: 6px; display: block; }
@@ -428,6 +427,12 @@ body::before {
 }
 .ghost-btn:hover { border-color: var(--accent); background: rgba(255,107,53,0.08); }
 
+/* ---------- Caso de éxito ---------- */
+.case-study { padding: 100px 0; border-top: 1px solid var(--line); }
+.case-grid { display: grid; grid-template-columns: 1.1fr 0.85fr; gap: 48px; align-items: center; }
+.case-stats { display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 900px) { .case-grid { grid-template-columns: 1fr; gap: 32px; } }
+
 /* ---------- Problem / Solution ---------- */
 .contrast { padding: 100px 0; border-top: 1px solid var(--line); }
 .contrast-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 8px; }
@@ -446,23 +451,16 @@ body::before {
 .bad .contrast-list svg { color: var(--danger); }
 .good .contrast-list svg { color: var(--success); }
 
-/* ---------- Services (horizontal cards) ---------- */
+/* ---------- Services (stacked grid) ---------- */
 .services { padding: 100px 0; border-top: 1px solid var(--line); background: var(--bg-alt); }
-.services-scroll-wrap { position: relative; }
-.services-scroll-wrap::before, .services-scroll-wrap::after {
-  content: ""; position: absolute; top: 0; bottom: 20px; width: 56px; z-index: 2; pointer-events: none;
-}
-.services-scroll-wrap::before { left: 0; background: linear-gradient(to right, var(--bg-alt), transparent); }
-.services-scroll-wrap::after { right: 0; background: linear-gradient(to left, var(--bg-alt), transparent); }
-.services-scroll {
-  display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;
-  padding: 4px 4px 22px; margin: 0 -4px; scrollbar-width: none;
+.services-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
   perspective: 1400px;
 }
-.services-scroll::-webkit-scrollbar { display: none; }
+@media (max-width: 900px) { .services-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .services-grid { grid-template-columns: 1fr; gap: 16px; } }
 
 .service-card {
-  flex: 0 0 292px; scroll-snap-align: start;
   background: linear-gradient(180deg, var(--card-hi), var(--card)); border: 1px solid var(--card-line);
   border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;
   transition: border-color 0.25s ease, transform 0.15s ease-out, box-shadow 0.15s ease-out;
@@ -552,26 +550,6 @@ body::before {
 .cta-service-link svg { width: 16px; height: 16px; transition: transform 200ms ease; }
 .service-card.cta-service:hover .cta-service-link svg { transform: translateX(4px); }
 
-.scroll-nav { display: flex; gap: 10px; margin-top: 4px; }
-.scroll-btn {
-  width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--card-line);
-  background: var(--card); display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: border-color 0.2s ease, background 0.2s ease;
-}
-.scroll-btn:hover { border-color: var(--accent); background: rgba(255,107,53,0.1); }
-.scroll-btn svg { width: 18px; height: 18px; }
-@media (max-width: 700px) { .scroll-nav { display: none; } }
-
-.scroll-hint {
-  display: none; align-items: center; gap: 8px; justify-content: center;
-  color: var(--muted-2); font-size: 0.78rem; font-weight: 600;
-  margin-top: 2px; letter-spacing: 0.02em;
-}
-.scroll-hint svg { width: 15px; height: 15px; animation: hint-slide 1.6s ease-in-out infinite; }
-@keyframes hint-slide { 0%, 100% { transform: translateX(0); opacity: 0.6; } 50% { transform: translateX(5px); opacity: 1; } }
-@media (max-width: 700px) { .scroll-hint { display: flex; } }
-@media (prefers-reduced-motion: reduce) { .scroll-hint svg { animation: none; } }
-
 /* ---------- Quiénes somos ---------- */
 .why { padding: 100px 0; border-top: 1px solid var(--line); }
 .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; margin-top: 8px; }
@@ -617,20 +595,15 @@ body::before {
   .nav-toggle { display: flex; }
   .mobile-menu { display: flex; }
   .hero-grid { grid-template-columns: 1fr; gap: 52px; }
-  .widget-wrap { order: -1; }
   .contrast-grid { grid-template-columns: 1fr; gap: 20px; }
-  .stat-row { max-width: 100%; margin-top: 48px; gap: 14px; }
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 560px) {
   .hero { padding: 36px 0 56px; }
   .contrast, .services, .why { padding: 76px 0; }
   .final-cta { padding: 76px 0; }
-  .stat-row { grid-template-columns: 1fr; gap: 26px; }
   .stat-pill { border: none; background: none; border-radius: 0; padding: 0 0 0 18px; border-left: 3px solid var(--accent); }
   .final-checklist { flex-direction: column; align-items: flex-start; gap: 14px; }
-  .services-scroll { gap: 16px; }
-  .service-card { flex-basis: calc(100% - 44px); }
   .team-grid { grid-template-columns: 1fr; gap: 20px; }
   .contrast-col { padding: 30px 24px; }
   .services-head-row { gap: 18px; margin-bottom: 44px; }
@@ -836,11 +809,6 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
         <a class="cta-primary" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener">Agendar reunión gratis</a>
         <span class="cta-note">Diagnóstico de 20 min · Sales con un plan claro, sin costo</span>
       </div>
-      <div class="stat-row">
-        <div class="stat-pill"><span class="stat-num">24/7</span><span class="stat-label">Respuesta inmediata, incluso a las 3 AM</span></div>
-        <div class="stat-pill"><span class="stat-num">&lt;10s</span><span class="stat-label">Tiempo promedio de primera respuesta</span></div>
-        <div class="stat-pill"><span class="stat-num">0</span><span class="stat-label">Leads sin seguimiento</span></div>
-      </div>
     </div>
 
     <div class="widget-wrap">
@@ -897,102 +865,111 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
       <a class="ghost-btn" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener">Agendar reunión</a>
     </div>
 
-    <div class="services-scroll-wrap">
-      <div class="services-scroll">
-        <div class="service-card reveal" style="transition-delay:0ms">
-          <div class="card-visual visual-copiloto has-photo">
-            <img class="card-photo" src="assets/card-copiloto.jpg" alt="Copiloto de IA conectado a múltiples usuarios de la empresa" loading="lazy">
-            <span class="card-badge">Automatización IA</span>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Copiloto empresarial</div>
-            <p class="card-desc">Un asistente de IA que vive dentro de tu operación: responde dudas internas, redacta documentos, resume información y ejecuta tareas repetitivas junto a tu equipo. Se entrena con tus propios procesos, no con respuestas genéricas, así que habla como tu negocio desde el primer día.</p>
-            <div class="card-meta">
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Implementación: 1–2 semanas</span>
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: equipos con tareas repetitivas</span>
-            </div>
+    <div class="services-grid">
+      <div class="service-card reveal" style="transition-delay:0ms">
+        <div class="card-visual visual-copiloto has-photo">
+          <img class="card-photo" src="assets/card-copiloto.jpg" alt="Copiloto de IA conectado a múltiples usuarios de la empresa" loading="lazy">
+          <span class="card-badge">Automatización IA</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Copiloto empresarial</div>
+          <p class="card-desc">Un asistente de IA entrenado con tus propios procesos: responde dudas internas y hace tareas repetitivas junto a tu equipo.</p>
+          <div class="card-meta">
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Implementación: 1–2 semanas</span>
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: equipos con tareas repetitivas</span>
           </div>
         </div>
+      </div>
 
-        <div class="service-card reveal" style="transition-delay:60ms">
-          <div class="card-visual visual-chatbot has-photo">
-            <img class="card-photo" src="assets/card-chatbot.jpg" alt="Robot de chat respondiendo automáticamente las 24 horas, conectado a un reloj de disponibilidad continua" loading="lazy">
-            <span class="card-badge">Atención al cliente</span>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Chatbot de atención 24/7</div>
-            <p class="card-desc">Responde por WhatsApp, Instagram o tu sitio web las 24 horas del día, todos los días del año. Resuelve las preguntas frecuentes al instante, califica al cliente según lo que necesita y agenda la reunión sin que nadie de tu equipo tenga que estar pendiente del teléfono.</p>
-            <div class="card-meta">
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Implementación: 1 semana</span>
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: alto volumen de mensajes</span>
-            </div>
+      <div class="service-card reveal" style="transition-delay:60ms">
+        <div class="card-visual visual-chatbot has-photo">
+          <img class="card-photo" src="assets/card-chatbot.jpg" alt="Robot de chat respondiendo automáticamente las 24 horas, conectado a un reloj de disponibilidad continua" loading="lazy">
+          <span class="card-badge">Atención al cliente</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Chatbot de atención 24/7</div>
+          <p class="card-desc">Responde por WhatsApp, Instagram o tu sitio web a toda hora y agenda la reunión sin que nadie de tu equipo esté pendiente.</p>
+          <div class="card-meta">
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Implementación: 1 semana</span>
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: alto volumen de mensajes</span>
           </div>
         </div>
+      </div>
 
-        <div class="service-card reveal" style="transition-delay:120ms">
-          <div class="card-visual visual-ads has-photo">
-            <img class="card-photo" src="assets/card-ads.jpg" alt="Landing page de captación de reuniones vista en laptop y celular" loading="lazy">
-            <span class="card-badge">Marketing</span>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Marketing con IA (Meta Ads)</div>
-            <p class="card-desc">Creamos y administramos tus campañas de Meta Ads optimizadas con inteligencia artificial: segmentación más precisa, pruebas de creatividades en paralelo y ajustes automáticos de presupuesto hacia lo que mejor convierte. La meta no es solo tráfico, es bajar tu costo por reunión agendada.</p>
-            <div class="card-meta">
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Gestión: mensual</span>
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: negocios que ya invierten en ads</span>
-            </div>
+      <div class="service-card reveal" style="transition-delay:120ms">
+        <div class="card-visual visual-ads has-photo">
+          <img class="card-photo" src="assets/card-ads.jpg" alt="Landing page de captación de reuniones vista en laptop y celular" loading="lazy">
+          <span class="card-badge">Marketing</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Marketing con IA (Meta Ads)</div>
+          <p class="card-desc">Campañas de Meta Ads optimizadas con IA: mejor segmentación y ajuste automático de presupuesto hacia lo que más convierte.</p>
+          <div class="card-meta">
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Gestión: mensual</span>
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: negocios que ya invierten en ads</span>
           </div>
         </div>
+      </div>
 
-        <div class="service-card reveal" style="transition-delay:180ms">
-          <div class="card-visual visual-landing has-photo">
-            <img class="card-photo" src="assets/card-landing.jpg" alt="Wireframe de landing page con botón de conversión destacado" loading="lazy">
-            <span class="card-badge">Diseño y conversión</span>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Landing pages</div>
-            <p class="card-desc">Diseñamos páginas de venta pensadas para un solo objetivo: que el visitante agende una reunión, no que simplemente mire y se vaya. Cada sección, cada botón y cada palabra está puesta ahí para mover al visitante un paso más cerca de la conversión.</p>
-            <div class="card-meta">
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Entrega: 5–7 días</span>
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: lanzar una campaña nueva</span>
-            </div>
+      <div class="service-card reveal" style="transition-delay:180ms">
+        <div class="card-visual visual-landing has-photo">
+          <img class="card-photo" src="assets/card-landing.jpg" alt="Wireframe de landing page con botón de conversión destacado" loading="lazy">
+          <span class="card-badge">Diseño y conversión</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Landing pages</div>
+          <p class="card-desc">Páginas de venta pensadas para un solo objetivo: que el visitante agende una reunión, no que mire y se vaya.</p>
+          <div class="card-meta">
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Entrega: 5–7 días</span>
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: lanzar una campaña nueva</span>
           </div>
         </div>
+      </div>
 
-        <div class="service-card reveal" style="transition-delay:240ms">
-          <div class="card-visual visual-rag has-photo">
-            <img class="card-photo" src="assets/card-rag.jpg" alt="Base de datos conectada a un robot de IA que distribuye documentos y carpetas" loading="lazy">
-            <span class="card-badge">Automatización IA</span>
-          </div>
-          <div class="card-body">
-            <div class="card-title">RAG de datos</div>
-            <p class="card-desc">Conectamos la IA a tus propios documentos, catálogos, precios y procesos internos, para que responda con información real de tu negocio y no con datos genéricos de internet. Tu conocimiento queda disponible al instante para tu equipo o tus clientes, siempre actualizado.</p>
-            <div class="card-meta">
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Implementación: 1–2 semanas</span>
-              <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: catálogos o procesos complejos</span>
-            </div>
+      <div class="service-card reveal" style="transition-delay:240ms">
+        <div class="card-visual visual-rag has-photo">
+          <img class="card-photo" src="assets/card-rag.jpg" alt="Base de datos conectada a un robot de IA que distribuye documentos y carpetas" loading="lazy">
+          <span class="card-badge">Automatización IA</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">RAG de datos</div>
+          <p class="card-desc">La IA responde con tus propios documentos, catálogos y precios — no con información genérica de internet.</p>
+          <div class="card-meta">
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Implementación: 1–2 semanas</span>
+            <span class="card-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>Ideal para: catálogos o procesos complejos</span>
           </div>
         </div>
+      </div>
 
-        <a class="service-card cta-service reveal" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener" style="transition-delay:300ms">
-          <div class="card-visual visual-cta has-photo">
-            <img class="card-photo" src="assets/card-cta.jpg" alt="Logo de Khrono sobre una red neuronal tecnológica" loading="lazy">
-            <span class="card-badge">Agenda gratis</span>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Cotiza con nosotros</div>
-            <p class="card-desc">Cuéntanos cómo trabaja tu negocio hoy. En una llamada armamos la propuesta, el alcance y el plan de implementación.</p>
-            <span class="cta-service-link">Agendar reunión<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
+      <a class="service-card cta-service reveal" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener" style="transition-delay:300ms">
+        <div class="card-visual visual-cta has-photo">
+          <img class="card-photo" src="assets/card-cta.jpg" alt="Logo de Khrono sobre una red neuronal tecnológica" loading="lazy">
+          <span class="card-badge">Agenda gratis</span>
+        </div>
+        <div class="card-body">
+          <div class="card-title">Cotiza con nosotros</div>
+          <p class="card-desc">Cuéntanos cómo trabaja tu negocio hoy y armamos la propuesta en una llamada.</p>
+          <span class="cta-service-link">Agendar reunión<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="case-study" id="caso-exito">
+  <div class="container">
+    <div class="case-grid">
+      <div class="case-copy reveal">
+        <span class="eyebrow">Caso real</span>
+        <h2 class="section-title">Lo probamos en nuestro propio negocio antes de ofrecértelo</h2>
+        <p class="section-desc">Prolig es la corredora de propiedades de Felipe, cofundador de Khrono. Antes de construir sistemas para otros negocios, automatizó el suyo: cotizaciones, seguimiento de leads y gestión documental, todo llevado por IA.</p>
+        <p class="section-desc">Hoy su parte del trabajo se reduce a mostrar propiedades y firmar al cobrar la comisión — <b>el sistema hace el resto</b>, todos los días, sin que nadie tenga que estar encima.</p>
+      </div>
+      <div class="case-stats reveal" style="transition-delay:100ms">
+        <div class="stat-pill"><span class="stat-num">90%</span><span class="stat-label">de los procesos de la corredora automatizados con IA — cotizaciones, seguimiento y gestión documental</span></div>
+        <div class="stat-pill"><span class="stat-num">2 sueldos</span><span class="stat-label">ahorrados cada mes: el sistema hace hoy lo que antes hacían dos personas</span></div>
       </div>
     </div>
-
-    <div class="scroll-nav">
-      <button class="scroll-btn prev" type="button" aria-label="Ver servicios anteriores"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
-      <button class="scroll-btn next" type="button" aria-label="Ver más servicios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-    </div>
-    <p class="scroll-hint">Desliza para ver los demás servicios<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></p>
   </div>
 </section>
 
@@ -1134,15 +1111,6 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
         navToggle.setAttribute('aria-expanded', 'false');
       });
     });
-  }
-
-  var track = document.querySelector('.services-scroll');
-  var prev = document.querySelector('.scroll-btn.prev');
-  var next = document.querySelector('.scroll-btn.next');
-  if (track && prev && next) {
-    var step = 312;
-    prev.addEventListener('click', function () { track.scrollBy({ left: -step, behavior: 'smooth' }); });
-    next.addEventListener('click', function () { track.scrollBy({ left: step, behavior: 'smooth' }); });
   }
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
