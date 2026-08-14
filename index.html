@@ -399,6 +399,18 @@ body::before {
 .demo-retry { background: none; border: none; color: var(--muted-2); font-size: 0.8rem; text-decoration: underline; cursor: pointer; margin-top: 2px; }
 .demo-retry:hover { color: var(--ink); }
 
+@media (max-width: 640px) {
+  .widget-card { padding: 18px; }
+  .demo-rubros { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .demo-rubro-btn { width: 100%; padding: 13px 12px; font-size: 0.84rem; }
+  .demo-messages { height: 280px; }
+  .demo-msg { max-width: 90%; font-size: 0.88rem; }
+  .demo-input { font-size: 16px; padding: 13px 14px; }
+  .demo-send { width: 46px; height: 46px; }
+  .demo-paywall { padding: 24px 20px; }
+  .demo-paywall h3 { font-size: 1.15rem; }
+}
+
 /* ---------- Section head ---------- */
 .section-head { max-width: 640px; }
 .services-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
@@ -604,7 +616,8 @@ body::before {
   .nav-cta { display: none; }
   .nav-toggle { display: flex; }
   .mobile-menu { display: flex; }
-  .hero-grid { grid-template-columns: 1fr; gap: 44px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .widget-wrap { order: -1; }
   .contrast-grid { grid-template-columns: 1fr; }
   .stat-row { max-width: 100%; }
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
@@ -1394,7 +1407,14 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
   var captionEl = document.getElementById('demoCaption');
   var paywallEl = document.getElementById('demoPaywall');
   var retryBtn = document.getElementById('demoRetry');
+  var demoCard = document.getElementById('demoCard');
   if (!rubrosEl) return;
+
+  inputEl.addEventListener('focus', function () {
+    setTimeout(function () {
+      demoCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 300);
+  });
 
   var currentRubroKey = null;
   var chatHistory = [];

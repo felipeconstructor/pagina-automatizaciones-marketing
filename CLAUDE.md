@@ -658,6 +658,38 @@ exactamente lo que Khrono vende.
   (por ejemplo, throttling por IP en el propio Apps Script o mover esto a
   un servicio con mejor control de cuota).
 
+### Adaptación mobile (13 ago 2026)
+
+Ajustes para que el mismo widget sea cómodo en celular (mayoría del
+tráfico de Ads es mobile):
+
+- `@media (max-width: 640px)`: chips de rubro en grilla de 2 columnas
+  (antes solo `flex-wrap`), botones con más padding para el dedo, el
+  input del chat sube a `font-size: 16px` — **abajo de 16px, iOS hace
+  zoom automático de toda la página al enfocar el campo**, un problema
+  real de usabilidad que no se nota probando en desktop.
+- `@media (max-width: 900px)` (mismo breakpoint donde `.hero-grid` pasa a
+  una columna): `.widget-wrap { order: -1; }` — en mobile el widget del
+  demo aparece **antes** que el texto del hero, no después. Decisión a
+  propósito: en mobile la gente hace scroll rápido y se quería que la
+  parte interactiva "enganche" antes de que se aburran con el copy. El
+  orden en el DOM no cambió (SEO/lectores de pantalla siguen viendo el
+  texto primero), solo el orden visual vía CSS `order`.
+- JS: al hacer foco en el input del chat, se hace
+  `demoCard.scrollIntoView({block:'center'})` con un pequeño delay — para
+  que el teclado del celular no tape la conversación justo cuando el
+  usuario empieza a escribir.
+- **Importante — cómo se verificó (o no)**: `resize_window` de Claude en
+  Chrome **no cambia el viewport real** en este entorno (se confirmó con
+  `window.innerWidth` después del resize: seguía en el ancho de
+  escritorio) — es la misma limitación ya documentada arriba en la
+  sección de favicon/mobile de jul 2026. Estos cambios se escribieron a
+  partir de la matemática real de anchos (`.container` padding 24px +
+  `.widget-card` padding 18px en mobile) y buenas prácticas conocidas,
+  pero **no se verificaron visualmente en un dispositivo real dentro de
+  esta sesión** — si se retoma, pedirle a Rodolfo que confirme en su
+  celular antes de asumir que quedó perfecto.
+
 ## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
 
 Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la
