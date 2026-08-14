@@ -690,6 +690,37 @@ tráfico de Ads es mobile):
   esta sesión** — si se retoma, pedirle a Rodolfo que confirme en su
   celular antes de asumir que quedó perfecto.
 
+**Corrección (13 ago 2026, más tarde)**: Rodolfo mandó screenshots reales
+de su iPhone — la primera pasada de arriba (aunque técnicamente
+funcional) se veía "muy cargada, colapsada, apretada". El problema real
+no era el widget del demo en sí (se veía bien organizado), sino que **al
+poner el widget primero (`order:-1`) se agregó un bloque completo más al
+stack vertical de la parte alta del hero**, y el espaciado entre bloques
+(gap del grid, margin-top de stat-row, padding entre secciones) no se
+había ajustado para compensar esa densidad extra. Se aumentó espaciado en
+mobile de forma consistente — siempre sumando respecto al valor base de
+escritorio, nunca restando:
+- `.hero-grid` gap (900px): 32px → 52px (separación clara entre el
+  widget del demo y el título del hero que viene después).
+- `.stat-row` margin-top (900px): 46px base → 48px; gap 14px → 14px en
+  mobile específico.
+- `.hero` padding (560px): de `40px 0 32px` a `36px 0 56px` — más aire
+  antes de pasar a la sección de servicios.
+- `.contrast, .services, .why` padding (560px): 60px → 76px.
+- `.section-head-block` margin-bottom (560px): 48px base → 56px.
+- `.services-head-row` margin-bottom (560px): 40px base → 44px.
+- `.stat-pill` padding, `.contrast-col` padding, `.team-grid` gap: todos
+  con un poco más de aire interno en mobile.
+- **Ojo con esto**: en el primer intento de este ajuste, por error se
+  escribieron un par de valores que *reducían* el espaciado respecto al
+  base de escritorio (contrario a lo pedido) y una regla `row-gap` en
+  `.services/.contrast/.why` que no hacía nada porque esas secciones son
+  bloques normales, no grid/flex — se corrigió antes de subir. Si se
+  ajusta espaciado de nuevo, comparar siempre contra el valor base (sin
+  `@media`) para confirmar que el cambio va en la dirección correcta.
+- Sigue sin verificarse en dispositivo real — pedirle a Rodolfo que
+  confirme con capturas nuevas.
+
 ## Webhook de leads devolvía 503 — 0 leads reales desde que arrancó la campaña (13 ago 2026)
 
 Rodolfo reportó 320 visitas y 0 interacciones/agendamientos desde que la

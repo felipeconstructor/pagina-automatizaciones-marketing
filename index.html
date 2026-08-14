@@ -616,23 +616,25 @@ body::before {
   .nav-cta { display: none; }
   .nav-toggle { display: flex; }
   .mobile-menu { display: flex; }
-  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero-grid { grid-template-columns: 1fr; gap: 52px; }
   .widget-wrap { order: -1; }
-  .contrast-grid { grid-template-columns: 1fr; }
-  .stat-row { max-width: 100%; }
+  .contrast-grid { grid-template-columns: 1fr; gap: 20px; }
+  .stat-row { max-width: 100%; margin-top: 48px; gap: 14px; }
   .footer-top { grid-template-columns: 1fr; gap: 32px; }
 }
 @media (max-width: 560px) {
-  .hero { padding: 40px 0 32px; }
-  .contrast, .services, .why { padding: 60px 0; }
+  .hero { padding: 36px 0 56px; }
+  .contrast, .services, .why { padding: 76px 0; }
   .final-cta { padding: 76px 0; }
-  .stat-row { grid-template-columns: 1fr; }
+  .stat-row { grid-template-columns: 1fr; gap: 14px; }
+  .stat-pill { padding: 20px 18px; }
   .final-checklist { flex-direction: column; align-items: flex-start; gap: 14px; }
   .service-card { flex-basis: 258px; }
-  .team-grid { grid-template-columns: 1fr; }
-  .contrast-col { padding: 26px 22px; }
-  .services-head-row { gap: 18px; }
+  .team-grid { grid-template-columns: 1fr; gap: 20px; }
+  .contrast-col { padding: 30px 24px; }
+  .services-head-row { gap: 18px; margin-bottom: 44px; }
   .services-head-row .ghost-btn { width: 100%; text-align: center; }
+  .section-head-block { margin-bottom: 56px; }
 }
 
 /* ---------- Qualify modal ---------- */
