@@ -330,6 +330,49 @@ https://claude.ai/code/artifact/8659f73d-3b95-4e07-ad96-cef821e9d2d4
   pena migrar esta calculadora a un archivo dentro del repo en vez de
   vivir solo como Artifact.
 
+## Subagente "khrono" (Claude Code) — 10 ago 2026
+
+Subagente custom en carpeta dedicada `.claude/agents/khrono/` (no archivo
+suelto): la identidad del agente la da el campo `name` del frontmatter, no
+la ruta.
+
+- `khrono.md` — definición del agente (`model: opus`). Persona: empresario
+  senior (40 años) + programador senior + investigador de mercado. Se
+  invoca cuando hay que estructurar cómo entregar a un cliente cualquiera
+  de los 8 servicios de la agencia (automatización integral, copiloto
+  empresarial, marketing con IA, RAG/chatbot, CRM a medida, landing pages,
+  agentes de IA, dashboard en vivo): aplica un framework de diagnóstico de
+  3 preguntas, traduce el servicio a lenguaje de valor/negocio (nunca de
+  tecnología), arma la ruta técnica ajustada al cliente, define la métrica
+  de éxito a 90 días, y entrega el prompt de Claude listo para ese
+  servicio.
+- `conocimiento-servicios-ia.md` — base de conocimiento destilada del
+  informe estratégico (ver más abajo): contexto de mercado, framework de
+  venta sin vender IA, ruta técnica de los 8 servicios, stack recomendado,
+  cómo priorizar inversión de crecimiento, radar de qué se vende más con
+  IA.
+- **Regla dura:** el agente nunca inventa, sugiere ni cita precios de
+  KHRONO — siempre remite a la calculadora interna (ver "Calculadora de
+  cotización" arriba). Tampoco cubre el negocio secundario de e-commerce
+  (excluido a propósito de su conocimiento).
+- Se invoca vía el tool Agent con `subagent_type: khrono`.
+
+## Informes internos generados (carpeta `informes/`, no versionada al público)
+
+- `KHRONO IA - Informe Estrategico (ago 2026).pdf` (31 páginas) — informe
+  de mercado de agencias de IA, framework de venta por valor, los 8
+  servicios con ruta técnica y precio sugerido, stack recomendado, plan de
+  crecimiento a 12 meses, y apartado separado de e-commerce con IA como
+  negocio secundario. Fuente original del contenido que nutrió al
+  subagente `khrono` (sin los precios).
+- `KHRONO IA - Prospectos La Ligua y Cabildo (ago 2026).pdf` — ~34
+  negocios reales (Páginas Amarillas Chile) de La Ligua y Cabildo con
+  nombre, dirección y teléfono, filtrados por rubro (inmobiliarias,
+  ferreterías, restaurantes, clínicas dentales, supermercados) para
+  prospección directa. No incluye Papudo/Zapallar/Petorca todavía.
+  Números de directorio público, verificar vigencia antes de contactar en
+  volumen.
+
 ## Nota — "no se ve actualizado" casi siempre es caché del navegador (7 ago 2026)
 
 Después de pushear el botón de WhatsApp y las 6 fotos de tarjetas
