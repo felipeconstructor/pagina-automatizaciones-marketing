@@ -1027,6 +1027,178 @@ Sheet mientras el webhook estuvo fallando (el paso de agendar es
 independiente del webhook, así que pudo haber gente que agendó igual sin
 que quedara registrado como lead).
 
+## Fotos reales del equipo en Quiénes somos (14 ago 2026)
+
+Rodolfo pidió agregar fotos reales de él y de Felipe a la sección
+"Quiénes somos" (antes cada `team-card` mostraba solo un ícono SVG
+genérico). Confirmó explícitamente que quería usar las fotos aunque
+tienen estética muy editorial/generada (ambientación tipo mansión de
+lujo, iluminación de estudio) — se le preguntó si eran fotos reales o
+generadas por IA dado que la sección dice textualmente "somos dos
+personas reales, no una agencia genérica", y pidió instalarlas igual
+("ponlas nomas") sin confirmar cuál de las dos opciones eran.
+
+- **Origen de los archivos**: Rodolfo dejó los originales en
+  `~/Documents/Automatizaciones/` (no en `assets/`), nombrados
+  `Foto Rodolfo.PNG` (1023×1537, la foto frente al Porsche) y
+  `Foto Felipe.JPG` (1086×1448, la foto del living con vista a
+  Hollywood Hills) — **el mapeo nombre↔persona no es intuitivo por el
+  contenido de la imagen**, hay que guiarse por el nombre de archivo
+  que puso Rodolfo, no asumir por la escena.
+- **Recorte**: `sips -c <h> <w> --cropOffset <offsetY> <offsetH>`
+  permite recorte no centrado (a diferencia del crop centrado por
+  defecto de `-c`). Se usó para centrar la cara de cada uno dentro de
+  un cuadrado de 900×900 antes de reescalar. Advertencia real
+  encontrada: `sips -z` conserva el **formato interno original** aunque
+  el archivo de salida tenga extensión `.jpg` — el PNG de Rodolfo quedó
+  como PNG disfrazado de `.jpg` (290KB en vez de ~40KB) hasta forzar
+  `-s format jpeg` explícito.
+- **Iteración 1 (foto circular chica, 72px)**: `.team-icon` reemplazado
+  por `<img class="team-photo">` circular con anillo del color de
+  marca. Rodolfo la vio en producción y pidió más espacio — a esa
+  escala no se apreciaban bien.
+- **Iteración 2 (banner con degradado, versión final)**: cada
+  `team-card` ahora tiene `.team-photo-wrap` (foto de ancho completo,
+  280px de alto, `object-fit: cover`) seguido de `.team-card-body`
+  (el padding que antes tenía toda la tarjeta). El degradado
+  (`.team-photo-wrap::after`, `linear-gradient` de transparente a
+  `var(--card)`) funde la foto con el fondo de la tarjeta antes de que
+  empiece el texto — mismo `var(--card)` que usa el gradiente de fondo
+  de `.team-card`, así no se nota la costura. Imágenes regeneradas a
+  640×640 (antes 480×480) porque a este tamaño de banner se notaba la
+  falta de resolución.
+- **Bug real encontrado y corregido**: con `object-position: center
+  30%` (mismo valor para ambas fotos), la foto de Felipe quedaba
+  cortada a la altura de la nariz — en su foto original la cara está
+  mucho más arriba en el encuadre que en la de Rodolfo (headroom
+  distinto en cada foto de origen), así que el mismo porcentaje de
+  recorte no sirve para ambas. Se agregó un override específico por
+  imagen (mismo patrón `[src*="..."]` que ya usan las `card-photo` de
+  servicios): `.team-photo[src*="team-felipe"] { object-position:
+  center 2%; }`. **Si se agregan más fotos de personas a futuro,
+  revisar el encuadre de cada una por separado en vez de asumir que un
+  solo `object-position` sirve para todas** — depende de dónde quedó
+  la cara dentro del recorte cuadrado original.
+- Verificado visualmente con servidor local (`python3 -m http.server`)
+  + Claude en Chrome, con zoom sobre cada tarjeta para confirmar que no
+  se cortaba la cara y que el degradado no dejaba una costura visible.
+- 2 commits separados (iteración 1 y 2), ambos pusheados directo a
+  `main`: `d75e521` (fotos circulares) y `644f7b3` (rediseño banner).
+
+## Hint del widget del hero + calculadora nueva en /calculadora/ (19 ago 2026)
+
+Rodolfo notó que mucha gente que ve la landing no se da cuenta de que el
+widget "Haz tu agente gratis" del hero es interactivo. Pidió: (1) hacerlo
+más notorio, y (2) una página/calculadora nueva, con link propio
+compartible, que estime cuánto ganaría un negocio con Khrono.
+
+- **Hint del widget** (`index.html`): se agregó `.widget-hint`, una franja
+  naranja pegada arriba de `.widget-card` (bleed con `margin: -22px -22px
+  18px`, mismo padding que la tarjeta) con el texto "↓ Prueba aquí cómo
+  quedaría tu agente" y una animación sutil de vaivén horizontal
+  (`hint-wiggle`, respeta `prefers-reduced-motion`). También se cambió el
+  `widget-sub` de "Elige el rubro de tu negocio" a "Elige tu rubro y
+  pruébalo tú mismo" para reforzar el mensaje.
+- **Botón hacia la calculadora**: nueva sección `.calc-promo` insertada
+  justo después de `#caso-exito` (antes de `#servicios`) — tarjeta con
+  borde/glow naranja, "¿Cuánto ganaría tu negocio con Khrono?" +
+  botón a `/calculadora/`.
+
+### La calculadora (`/calculadora/index.html`, archivo nuevo)
+
+Página standalone (no vive dentro de `index.html`), con su propio
+`<head>`/nav/footer pero misma identidad de marca. **Diferencia clave de
+implementación**: en vez de duplicar las fuentes embebidas en base64 de
+`index.html` (~900KB), esta página carga Fraunces/Onest/Public Sans desde
+Google Fonts (`fonts.googleapis.com`) — más liviano, aceptable porque es
+un sitio público real (no un Artifact con CSP restrictiva).
+
+**Iteración 1 → 2 → 3 de la interacción** (a pedido de Rodolfo, en la misma
+sesión):
+1. Primero: inputs numéricos con recálculo en vivo mientras se escribía,
+   incluyendo un campo de "ticket promedio (CLP)" y resultados en horas /
+   clientes / pesos.
+2. Rodolfo pidió sacar el ticket promedio, agregar un botón "Calcular mi
+   ahorro" con un estado de "Calculando..." de ~2.2s (spinner de 3 puntos,
+   mismo patrón visual que `.demo-typing` del chat del hero) antes de
+   mostrar el resultado, y que los resultados fueran **solo porcentajes**,
+   nunca cifras fijas en CLP. Se implementaron 3 estados en la tarjeta de
+   resultados (`#calcIdle` / `#calcLoading` / `#calcDone`), y cualquier
+   cambio en las respuestas después de calcular vuelve la tarjeta a
+   `calcIdle` (hay que presionar el botón de nuevo, a propósito, para que
+   se sienta como "recalcular" y no como algo que se actualiza solo).
+3. Rodolfo pidió además: (a) preguntar por **mensajes al día**, no al mes
+   (b) que **todas** las preguntas fueran de alternativas (chips), sin
+   ningún input numérico ni `<select>`, y (c) que el **marketing** entrara
+   de verdad al cálculo (no solo como nota al pie) para mostrar el
+   potencial de ganancia combinado.
+
+**Estado final de las preguntas** (todas `.calc-chip` dentro de
+`.calc-qgroup`, un solo `<button>` activo por grupo, sin inputs de
+teclado): rubro (5 chips con emoji, igual que el demo del hero) → mensajes
+por día (1 a 5 / 6 a 15 / 16 a 30 / +30) → tiempo de respuesta actual (<5min
+/ 15-30min / 1-2h / +2h) → horas semanales dedicadas a responder a mano
+(<3h / 3-7h / 8-15h / +15h) → un separador visual "TU MARKETING HOY"
+(`.calc-qgroup-divider`) → cómo consiguen clientes nuevos hoy (casi no
+hago marketing / publico de vez en cuando / ya invierto en campañas
+pagadas). Cada rubro trae una combinación de respuestas por defecto
+(`RUBROS` en el `<script>`) que se aplican como chips activos al elegirlo,
+editables por el usuario.
+
+**Fórmulas** (todas en el `<script>` al final del archivo, sin backend —
+100% cálculo en el cliente):
+- `perdidaPct` según tiempo de respuesta: <5min=5%, 15-30min=15%,
+  1-2h=30%, +2h=45%. Con Khrono (respuesta instantánea 24/7) baja a un
+  piso de 5% (pérdida irreducible, no todo es velocidad).
+- **% clientes recuperados** = `(perdidaPct - 5%) / perdidaPct` — qué
+  fracción de lo que hoy se pierde, se recupera.
+- **% horas liberadas** = fijo por rubro (`automatizable`: restaurante
+  80%, clínica 70%, inmobiliaria 65%, ferretería/tienda 75%, otro 70%) —
+  no depende de las horas semanales declaradas (esas solo se usan en el
+  texto de "cómo calculamos esto" para dar contexto).
+- **% ingresos por automatización** = `(convertidoConKhrono -
+  convertidoHoy) / convertidoHoy`, donde `convertido = 1 - perdidaPct`.
+  Ojo: la primera versión de esta fórmula multiplicaba el delta de
+  pérdida por una tasa de conversión por rubro y daba números chicos
+  (~3%) poco convincentes — se cambió a esta razón directa (independiente
+  de conversión) porque escala de forma más intuitiva con lo mal que
+  respondes hoy (15-30min ≈ 12%, 1-2h ≈ 36%, +2h ≈ 73%).
+- **% marketing** = fijo por nivel de marketing actual declarado:
+  "casi no hago marketing" 35%, "publico de vez en cuando" 20%, "ya
+  invierto en campañas pagadas" 10% — a propósito inversamente
+  proporcional al esfuerzo actual (menos marketing hoy = más techo de
+  crecimiento posible).
+- **% total combinado** (el resultado grande y destacado,
+  `.calc-result-total`) = `(1 + ingresoAutomatización) × (1 + marketing) -
+  1` — compone ambos efectos en vez de sumarlos.
+- El desplegable "¿Cómo calculamos esto?" (`<details class="calc-how">`)
+  arma un párrafo con las 4 cifras y sus supuestos, para transparencia —
+  mismo espíritu que el resto del sitio (nada de caja negra).
+
+**Nota de marketing integrado**: la sección al pie de la calculadora
+(`.calc-marketing-note`) se reescribió de "esto es solo automatización"
+(cuando el marketing era solo un link) a "Automatización + marketing,
+mejor juntos" ahora que el marketing es parte real del cálculo — mantiene
+el botón "Ver todos los servicios →" hacia `/#servicios`.
+
+**Verificación**: probado completo en local (`python3 -m http.server
+8767`, servido desde la raíz del repo) vía Claude en Chrome — flujo de
+llenar preguntas → Calcular → estado de carga → resultados con las 4
+cifras → expandir "cómo calculamos esto" → click en "Ver marketing con
+IA" navega correctamente a `/#servicios` en `index.html`. Verificado que
+cambiar cualquier respuesta después de calcular vuelve al estado inicial.
+**No verificado en mobile real** (mismo caveat de siempre — `resize_window`
+de Claude en Chrome es poco confiable para esto), solo el layout responsive
+por CSS (`@media max-width: 860px/560px`, chips a 2 columnas).
+
+**Ruta y build**: `calculadora/index.html` (carpeta nueva en la raíz del
+repo) — GitHub Pages sirve automáticamente `/calculadora/` apuntando a ese
+`index.html`, sin configuración adicional. Todos los links internos
+(nav, promo de la landing, footer) usan rutas absolutas (`/`, `/assets/...`,
+`/calculadora/`, `/#servicios`) en vez de relativas, porque el sitio corre
+en la raíz del dominio (`CNAME` = `khrono.cl`) tanto en local
+(`python3 -m http.server` desde la raíz del repo) como en producción.
+
 ## Convenciones
 
 - Código y comentarios en español

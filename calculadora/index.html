@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Calcula gratis cuánto tiempo, clientes e ingresos podría ganar tu negocio combinando automatización con IA y marketing con IA. Resultados en segundos.">
+<title>Calculadora de ahorro — Khrono</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://khrono.cl/calculadora/">
+<meta property="og:title" content="Calculadora de ahorro — Khrono">
+<meta property="og:description" content="Calcula gratis cuánto tiempo, clientes e ingresos podría ganar tu negocio combinando automatización con IA y marketing con IA.">
+<meta property="og:image" content="https://khrono.cl/assets/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_CL">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Calculadora de ahorro — Khrono">
+<meta name="twitter:description" content="Calcula gratis cuánto tiempo, clientes e ingresos podría ganar tu negocio combinando automatización con IA y marketing con IA.">
+<meta name="twitter:image" content="https://khrono.cl/assets/og-image.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Onest:wght@500;700;800&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0A0A0A;
+  --bg-alt: #0D0D0C;
+  --card: #141413;
+  --card-hi: #1A1917;
+  --card-line: #272522;
+  --ink: #F7F5F2;
+  --muted: #ABA69D;
+  --muted-2: #7C776E;
+  --accent: #FF6B35;
+  --accent-2: #FFB020;
+  --accent-ink: #140A03;
+  --success: #2ECC71;
+  --line: #201F1C;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Public Sans", -apple-system, "Segoe UI", ui-sans-serif, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.accent { color: var(--accent); }
+
+/* film grain, same as sitio principal */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 200; pointer-events: none;
+  opacity: 0.035; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(10,10,10,0.82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  padding: 16px 24px;
+  max-width: 1100px; margin: 0 auto;
+}
+.logo-glass {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none;
+  padding: 7px 16px 7px 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.12);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.10), inset 0 -1px 0 rgba(0,0,0,0.25);
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.logo-glass:hover { border-color: rgba(255,177,53,0.35); transform: translateY(-1px); }
+.logo-glass img { display: block; }
+.logo-glass .logo-icon { height: 30px; width: auto; filter: drop-shadow(0 0 6px rgba(255,107,53,0.35)); }
+.logo-glass .logo-word { height: 16px; width: auto; margin-top: 2px; }
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.back-link { text-decoration: none; color: var(--muted); font-size: 0.86rem; font-weight: 600; transition: color 150ms ease; }
+.back-link:hover { color: var(--ink); }
+.nav-cta {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: var(--accent-ink);
+  padding: 11px 22px; border-radius: 999px; text-decoration: none;
+  font-weight: 800; font-size: 0.78rem; letter-spacing: 0.04em;
+  text-transform: uppercase; cursor: pointer; border: none; white-space: nowrap;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(255,107,53,0.4); }
+
+/* ---------- Botones compartidos ---------- */
+.cta-primary {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: var(--accent-ink);
+  padding: 17px 30px; border-radius: 999px; text-decoration: none;
+  font-weight: 800; font-size: 0.92rem; letter-spacing: 0.03em;
+  text-transform: uppercase; display: inline-block; border: none; cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+.cta-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(255,107,53,0.42); }
+.cta-primary:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
+.cta-note { display: block; color: var(--muted-2); font-size: 0.82rem; margin-top: 12px; }
+.ghost-btn {
+  border: 1px solid var(--card-line); color: var(--ink); background: transparent;
+  padding: 12px 22px; border-radius: 999px; text-decoration: none; display: inline-block;
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  white-space: nowrap; transition: border-color 0.2s ease, background 0.2s ease;
+}
+.ghost-btn:hover { border-color: var(--accent); background: rgba(255,107,53,0.08); }
+.eyebrow { color: var(--accent); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 12px; display: block; }
+.eyebrow-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1px solid var(--card-line); background: rgba(255,255,255,0.02);
+  border-radius: 999px; padding: 6px 14px; font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
+  margin-bottom: 22px;
+}
+.eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+@media (prefers-reduced-motion: no-preference) { .eyebrow-dot { animation: pulse-dot 2.2s ease-in-out infinite; } }
+@keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+/* ---------- Hero de la calculadora ---------- */
+.calc-hero { position: relative; padding: 64px 0 40px; overflow: hidden; text-align: center; }
+.calc-hero-glow {
+  position: absolute; top: -220px; left: 50%; width: 1100px; height: 560px;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(255,107,53,0.2), rgba(255,107,53,0) 68%);
+  filter: blur(10px); pointer-events: none; z-index: 0;
+}
+.calc-hero .container { position: relative; z-index: 1; max-width: 760px; }
+.calc-headline {
+  font-family: "Onest", -apple-system, "Segoe UI", ui-sans-serif, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.calc-subhead { margin: 20px auto 0; max-width: 580px; color: var(--muted); font-size: 1.05rem; line-height: 1.6; }
+
+/* ---------- Herramienta ---------- */
+.calc-tool { padding: 24px 0 100px; }
+.calc-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 26px; align-items: start; }
+
+.calc-form-card, .calc-results-card {
+  border: 1px solid var(--card-line); border-radius: 22px;
+  background: linear-gradient(180deg, var(--card-hi), var(--card));
+  padding: 30px 28px;
+}
+.calc-form-card h2 { font-family: "Fraunces", Georgia, serif; font-weight: 560; font-variation-settings: "opsz" 72, "WONK" 1; font-size: 1.4rem; margin-bottom: 20px; }
+
+.calc-qgroup { margin-bottom: 22px; }
+.calc-qgroup-divider { display: flex; align-items: center; gap: 10px; margin: 6px 0 20px; }
+.calc-qgroup-divider span { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); white-space: nowrap; }
+.calc-qgroup-divider::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+.calc-qlabel { display: block; font-size: 0.86rem; color: var(--muted); margin-bottom: 8px; line-height: 1.4; }
+
+.calc-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.calc-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px; border-radius: 12px;
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12);
+  color: var(--ink); font-size: 0.85rem; font-weight: 600; font-family: inherit;
+  cursor: pointer; transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+.calc-chip:hover { background: rgba(255,178,32,0.1); border-color: rgba(255,178,32,0.4); transform: translateY(-1px); }
+.calc-chip.active {
+  background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink);
+  border-color: transparent; font-weight: 700;
+}
+
+.calc-submit { width: 100%; text-align: center; margin: 10px 0 16px; }
+.calc-disclaimer { color: var(--muted-2); font-size: 0.76rem; line-height: 1.5; margin-top: 4px; }
+
+.calc-results-card { position: sticky; top: 96px; min-height: 320px; }
+
+.calc-idle { padding: 40px 0 20px; }
+.calc-idle p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; }
+.calc-idle p b { color: var(--ink); }
+
+.calc-loading { padding: 56px 0; text-align: center; }
+.calc-loading-dots { display: flex; justify-content: center; gap: 7px; margin-bottom: 18px; }
+.calc-loading-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); animation: calc-dot-bounce 1.1s ease-in-out infinite; }
+.calc-loading-dots span:nth-child(2) { animation-delay: 0.15s; }
+.calc-loading-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes calc-dot-bounce { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-6px); } }
+.calc-loading p { color: var(--muted); font-size: 0.92rem; }
+@media (prefers-reduced-motion: reduce) { .calc-loading-dots span { animation: none; opacity: 0.7; } }
+
+.calc-done { animation: calc-fade-in 420ms ease; }
+@keyframes calc-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.calc-result { border-top: 1px solid var(--line); padding: 16px 0; }
+.calc-result:first-of-type { border-top: none; padding-top: 4px; }
+.calc-result-num { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-variation-settings: "opsz" 40; font-size: clamp(2rem, 4vw, 2.5rem); display: block; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.calc-result-label { color: var(--muted); font-size: 0.86rem; margin-top: 4px; display: block; line-height: 1.4; }
+
+.calc-result-total {
+  margin-top: 6px; border-top: none; padding: 22px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255,178,32,0.16), rgba(255,107,53,0.06));
+  border: 1px solid rgba(255,178,32,0.32);
+}
+.calc-result-total-tag { display: block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-2); margin-bottom: 6px; }
+.calc-result-total .calc-result-num { color: var(--accent); font-size: clamp(2.6rem, 5.4vw, 3.3rem); }
+.calc-result-total .calc-result-label { color: var(--muted); }
+
+.calc-cta { display: block; text-align: center; margin-top: 22px; }
+
+.calc-how { margin-top: 22px; border-top: 1px solid var(--line); padding-top: 16px; }
+.calc-how summary { cursor: pointer; font-size: 0.84rem; font-weight: 700; color: var(--muted); list-style: none; }
+.calc-how summary::-webkit-details-marker { display: none; }
+.calc-how summary::before { content: '＋ '; color: var(--accent); }
+.calc-how[open] summary::before { content: '－ '; }
+.calc-how p { color: var(--muted-2); font-size: 0.82rem; line-height: 1.6; margin-top: 12px; }
+
+.calc-marketing-note {
+  display: flex; align-items: flex-start; gap: 20px; margin-top: 28px;
+  border: 1px solid var(--card-line); border-radius: 20px; padding: 28px 30px;
+  background: linear-gradient(180deg, var(--card-hi), var(--card));
+}
+.calc-marketing-icon { font-size: 1.8rem; flex-shrink: 0; }
+.calc-marketing-note h3 { font-family: "Fraunces", Georgia, serif; font-weight: 560; font-variation-settings: "opsz" 72, "WONK" 1; font-size: 1.15rem; margin-bottom: 8px; }
+.calc-marketing-note p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 16px; }
+.calc-marketing-note p b { color: var(--ink); }
+
+@media (max-width: 860px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .calc-results-card { position: static; }
+}
+@media (max-width: 560px) {
+  .calc-form-card, .calc-results-card { padding: 24px 20px; }
+  .calc-chip { flex: 1 1 calc(50% - 8px); justify-content: center; text-align: center; }
+  .calc-marketing-note { flex-direction: column; padding: 24px 20px; }
+}
+
+/* ---------- Footer ---------- */
+.footer { padding: 40px 0; border-top: 1px solid var(--line); }
+.footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.footer-copy { color: var(--muted-2); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo-glass" href="/" aria-label="Khrono — inicio"><img class="logo-icon" src="/assets/logo-icon.png" alt=""><img class="logo-word" src="/assets/logo-word.png" alt="KHRONO"></a>
+    <div class="nav-right">
+      <a class="back-link" href="/">← Volver al sitio</a>
+      <a class="nav-cta" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener">Agendar reunión</a>
+    </div>
+  </div>
+</nav>
+
+<header class="calc-hero">
+  <div class="calc-hero-glow" aria-hidden="true"></div>
+  <div class="container">
+    <span class="eyebrow-pill"><span class="eyebrow-dot"></span>Calculadora gratuita</span>
+    <h1 class="calc-headline">¿Cuánto podría ganar tu negocio <span class="accent">con Khrono</span>?</h1>
+    <p class="calc-subhead">Responde unas preguntas rápidas sobre tu negocio y tu marketing actual, y calculamos cuánto tiempo, clientes e ingresos podrías ganar combinando automatización con IA y marketing con IA.</p>
+  </div>
+</header>
+
+<section class="calc-tool">
+  <div class="container calc-grid">
+    <div class="calc-form-card reveal">
+      <h2>Tu negocio</h2>
+
+      <div class="calc-qgroup">
+        <span class="calc-qlabel">Tu rubro</span>
+        <div class="calc-chips" id="calcRubros">
+          <button type="button" class="calc-chip" data-value="restaurante">🍽️ Restaurante</button>
+          <button type="button" class="calc-chip" data-value="clinica">🦷 Clínica dental</button>
+          <button type="button" class="calc-chip" data-value="inmobiliaria">🏠 Inmobiliaria</button>
+          <button type="button" class="calc-chip" data-value="ferreteria">🛠️ Ferretería / Tienda</button>
+          <button type="button" class="calc-chip" data-value="otro">💬 Otro negocio</button>
+        </div>
+      </div>
+
+      <div class="calc-qgroup">
+        <span class="calc-qlabel">¿Cuántos mensajes o consultas recibes al día? (WhatsApp, Instagram, llamadas)</span>
+        <div class="calc-chips" id="calcMensajesGroup">
+          <button type="button" class="calc-chip" data-value="bajo">1 a 5</button>
+          <button type="button" class="calc-chip" data-value="medio">6 a 15</button>
+          <button type="button" class="calc-chip" data-value="alto">16 a 30</button>
+          <button type="button" class="calc-chip" data-value="muyalto">Más de 30</button>
+        </div>
+      </div>
+
+      <div class="calc-qgroup">
+        <span class="calc-qlabel">¿Cuánto demoras hoy en responder, en promedio?</span>
+        <div class="calc-chips" id="calcTiempoGroup">
+          <button type="button" class="calc-chip" data-value="rapido">Menos de 5 min</button>
+          <button type="button" class="calc-chip" data-value="medio">15 a 30 min</button>
+          <button type="button" class="calc-chip" data-value="lento">1 a 2 horas</button>
+          <button type="button" class="calc-chip" data-value="muylento">Más de 2 horas</button>
+        </div>
+      </div>
+
+      <div class="calc-qgroup">
+        <span class="calc-qlabel">Horas a la semana que tu equipo dedica a responder mensajes a mano</span>
+        <div class="calc-chips" id="calcHorasGroup">
+          <button type="button" class="calc-chip" data-value="bajo">Menos de 3h</button>
+          <button type="button" class="calc-chip" data-value="medio">3 a 7h</button>
+          <button type="button" class="calc-chip" data-value="alto">8 a 15h</button>
+          <button type="button" class="calc-chip" data-value="muyalto">Más de 15h</button>
+        </div>
+      </div>
+
+      <div class="calc-qgroup-divider"><span>Tu marketing hoy</span></div>
+
+      <div class="calc-qgroup">
+        <span class="calc-qlabel">¿Cómo consigues clientes nuevos hoy?</span>
+        <div class="calc-chips" id="calcMarketingGroup">
+          <button type="button" class="calc-chip" data-value="casi_nada">😴 Casi no hago marketing</button>
+          <button type="button" class="calc-chip" data-value="ocasional">📱 Publico de vez en cuando</button>
+          <button type="button" class="calc-chip" data-value="activo">📈 Ya invierto en campañas pagadas</button>
+        </div>
+      </div>
+
+      <button type="button" class="cta-primary calc-submit" id="calcSubmit">Calcular mi ahorro</button>
+      <p class="calc-disclaimer">Estimación referencial con promedios de negocios similares en Chile — no reemplaza una cotización real, esa te la damos en la reunión gratuita.</p>
+    </div>
+
+    <div class="calc-results-card reveal" style="transition-delay:100ms" id="calcResultsCard">
+      <span class="eyebrow">Con Khrono, cada mes</span>
+
+      <div class="calc-idle" id="calcIdle">
+        <p>Completa las preguntas de la izquierda y presiona <b>Calcular mi ahorro</b> para ver tu estimación.</p>
+      </div>
+
+      <div class="calc-loading" id="calcLoading" hidden>
+        <div class="calc-loading-dots"><span></span><span></span><span></span></div>
+        <p id="calcLoadingText">Analizando tu negocio...</p>
+      </div>
+
+      <div class="calc-done" id="calcDone" hidden>
+        <div class="calc-result">
+          <span class="calc-result-num" id="resHoras">0%</span>
+          <span class="calc-result-label">del tiempo que hoy pierdes respondiendo a mano, liberado para tu equipo</span>
+        </div>
+        <div class="calc-result">
+          <span class="calc-result-num" id="resLeads">0%</span>
+          <span class="calc-result-label">de los clientes que hoy se te escapan por responder tarde, recuperados</span>
+        </div>
+        <div class="calc-result">
+          <span class="calc-result-num" id="resMarketing">0%</span>
+          <span class="calc-result-label">más alcance y clientes nuevos posibles con marketing con IA</span>
+        </div>
+
+        <div class="calc-result calc-result-total">
+          <span class="calc-result-total-tag">🚀 Automatización + marketing</span>
+          <span class="calc-result-num" id="resTotal">0%</span>
+          <span class="calc-result-label">de aumento potencial estimado en tus ingresos mensuales</span>
+        </div>
+
+        <a class="cta-primary calc-cta" href="https://calendar.app.google/vx7JnYVW34hhfntu6" target="_blank" rel="noopener">Agenda tu diagnóstico gratis</a>
+        <span class="cta-note">20 min, sin costo — revisamos tu caso real y te decimos cómo</span>
+
+        <details class="calc-how">
+          <summary>¿Cómo calculamos esto?</summary>
+          <p id="calcFormulaText"></p>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="calc-marketing-note reveal">
+      <span class="calc-marketing-icon" aria-hidden="true">🚀</span>
+      <div>
+        <h3>Automatización + marketing, mejor juntos</h3>
+        <p>El chatbot evita que pierdas a los clientes que <b>ya te escriben</b>. El marketing con IA hace que <b>lleguen más</b>. Por separado ya suman — combinados, se potencian: más gente entrando, cero fuga por demora.</p>
+        <a class="ghost-btn" href="/#servicios">Ver todos los servicios →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <a class="logo-glass" href="/" aria-label="Khrono — inicio"><img class="logo-icon" src="/assets/logo-icon.png" alt=""><img class="logo-word" src="/assets/logo-word.png" alt="KHRONO"></a>
+    <span class="footer-copy">© 2026 Khrono — estimaciones referenciales, no una cotización.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var RUBROS = {
+    restaurante:  { mensajes: 'medio', tiempo: 'medio', horas: 'alto', marketing: 'ocasional',  automatizable: 0.80, nombre: 'restaurante' },
+    clinica:      { mensajes: 'bajo',  tiempo: 'lento',  horas: 'medio', marketing: 'ocasional', automatizable: 0.70, nombre: 'clínica' },
+    inmobiliaria: { mensajes: 'bajo',  tiempo: 'lento',  horas: 'alto',  marketing: 'activo',     automatizable: 0.65, nombre: 'inmobiliaria' },
+    ferreteria:   { mensajes: 'bajo',  tiempo: 'medio',  horas: 'medio', marketing: 'casi_nada',  automatizable: 0.75, nombre: 'tienda' },
+    otro:         { mensajes: 'bajo',  tiempo: 'medio',  horas: 'medio', marketing: 'ocasional',  automatizable: 0.70, nombre: 'negocio' }
+  };
+
+  var MENSAJES_DIA = {
+    bajo:    { label: '1 a 5 al día',     valor: 3 },
+    medio:   { label: '6 a 15 al día',    valor: 10 },
+    alto:    { label: '16 a 30 al día',   valor: 23 },
+    muyalto: { label: 'más de 30 al día', valor: 40 }
+  };
+  var HORAS_SEMANA = {
+    bajo:    { label: 'menos de 3 horas', valor: 2 },
+    medio:   { label: '3 a 7 horas',      valor: 5 },
+    alto:    { label: '8 a 15 horas',     valor: 11 },
+    muyalto: { label: 'más de 15 horas',  valor: 18 }
+  };
+  var PERDIDA = { rapido: 0.05, medio: 0.15, lento: 0.30, muylento: 0.45 };
+  var PERDIDA_LABEL = { rapido: 'menos de 5 minutos', medio: '15 a 30 minutos', lento: '1 a 2 horas', muylento: 'más de 2 horas' };
+  var PERDIDA_CON_KHRONO = 0.05;
+
+  var MARKETING = {
+    casi_nada: { label: 'casi no haces marketing hoy',        potencial: 0.35 },
+    ocasional: { label: 'publicas de vez en cuando',           potencial: 0.20 },
+    activo:    { label: 'ya inviertes en campañas pagadas',    potencial: 0.10 }
+  };
+
+  var state = { rubro: 'restaurante', mensajes: 'medio', tiempo: 'medio', horas: 'alto', marketing: 'ocasional' };
+  var resultsShown = false;
+  var loadingTimer = null;
+
+  var elSubmit = document.getElementById('calcSubmit');
+  var elIdle = document.getElementById('calcIdle');
+  var elLoading = document.getElementById('calcLoading');
+  var elDone = document.getElementById('calcDone');
+  var resHoras = document.getElementById('resHoras');
+  var resLeads = document.getElementById('resLeads');
+  var resMarketing = document.getElementById('resMarketing');
+  var resTotal = document.getElementById('resTotal');
+  var calcFormulaText = document.getElementById('calcFormulaText');
+
+  function setActiveChip(containerId, value) {
+    document.querySelectorAll('#' + containerId + ' .calc-chip').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.value === value);
+    });
+  }
+
+  function applyRubroDefaults(key) {
+    var r = RUBROS[key];
+    state.mensajes = r.mensajes;
+    state.tiempo = r.tiempo;
+    state.horas = r.horas;
+    state.marketing = r.marketing;
+    setActiveChip('calcMensajesGroup', state.mensajes);
+    setActiveChip('calcTiempoGroup', state.tiempo);
+    setActiveChip('calcHorasGroup', state.horas);
+    setActiveChip('calcMarketingGroup', state.marketing);
+  }
+
+  function showIdle() {
+    resultsShown = false;
+    elIdle.hidden = false;
+    elLoading.hidden = true;
+    elDone.hidden = true;
+  }
+
+  function resetIfShown() {
+    if (resultsShown) showIdle();
+  }
+
+  function wireChipGroup(containerId, onSelect) {
+    var el = document.getElementById(containerId);
+    el.addEventListener('click', function (e) {
+      var btn = e.target.closest('.calc-chip');
+      if (!btn) return;
+      el.querySelectorAll('.calc-chip').forEach(function (b) { b.classList.toggle('active', b === btn); });
+      onSelect(btn.dataset.value);
+      resetIfShown();
+    });
+  }
+
+  function calcular() {
+    var r = RUBROS[state.rubro];
+    var mensajesDia = MENSAJES_DIA[state.mensajes];
+    var horasSemana = HORAS_SEMANA[state.horas];
+    var mkt = MARKETING[state.marketing];
+    var perdidaPct = PERDIDA[state.tiempo] !== undefined ? PERDIDA[state.tiempo] : 0.15;
+
+    var convertidoHoy = 1 - perdidaPct;
+    var convertidoConKhrono = 1 - PERDIDA_CON_KHRONO;
+    var recuperaPct = perdidaPct > PERDIDA_CON_KHRONO ? ((perdidaPct - PERDIDA_CON_KHRONO) / perdidaPct) : 0;
+    var horasPct = r.automatizable;
+    var ingresoAutomatizacionPct = convertidoHoy > 0 ? Math.max(0, (convertidoConKhrono - convertidoHoy) / convertidoHoy) : 0;
+    var marketingPct = mkt.potencial;
+    var totalPct = (1 + ingresoAutomatizacionPct) * (1 + marketingPct) - 1;
+
+    resHoras.textContent = Math.round(horasPct * 100) + '%';
+    resLeads.textContent = Math.round(recuperaPct * 100) + '%';
+    resMarketing.textContent = Math.round(marketingPct * 100) + '%';
+    resTotal.textContent = Math.round(totalPct * 100) + '%';
+
+    var mensajesMes = Math.round(mensajesDia.valor * 30);
+
+    calcFormulaText.textContent = 'Con ~' + mensajesDia.label + ' (~' + mensajesMes + ' al mes) en un ' + r.nombre +
+      ', estimamos que hoy pierdes ' + Math.round(perdidaPct * 100) + '% de esos clientes por demorar en responder (' + PERDIDA_LABEL[state.tiempo] +
+      '). Con un agente respondiendo al instante 24/7, esa pérdida baja a ' + Math.round(PERDIDA_CON_KHRONO * 100) +
+      '% — recuperas el ' + Math.round(recuperaPct * 100) + '% de lo que hoy se te escapa, un ' + Math.round(ingresoAutomatizacionPct * 100) +
+      '% más de ingresos sobre lo que hoy conviertes. Las horas liberadas asumen que un ' + Math.round(horasPct * 100) +
+      '% de las ' + horasSemana.label + ' que hoy tu equipo responde a mano se puede automatizar en un ' + r.nombre +
+      '. Además, como hoy ' + mkt.label + ', estimamos hasta ' + Math.round(marketingPct * 100) +
+      '% más de alcance y clientes nuevos con marketing con IA. Combinando automatización y marketing, el aumento total estimado en tus ingresos mensuales llega a ' +
+      Math.round(totalPct * 100) + '%.';
+  }
+
+  function runCalculo() {
+    clearTimeout(loadingTimer);
+    elIdle.hidden = true;
+    elDone.hidden = true;
+    elLoading.hidden = false;
+    elSubmit.disabled = true;
+    elSubmit.textContent = 'Calculando...';
+    var resultsCard = document.getElementById('calcResultsCard');
+    if (resultsCard) resultsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    loadingTimer = setTimeout(function () {
+      calcular();
+      elLoading.hidden = true;
+      elDone.hidden = false;
+      elSubmit.disabled = false;
+      elSubmit.textContent = 'Calcular mi ahorro';
+      resultsShown = true;
+    }, 2200);
+  }
+
+  var elRubros = document.getElementById('calcRubros');
+  elRubros.addEventListener('click', function (e) {
+    var btn = e.target.closest('.calc-chip');
+    if (!btn) return;
+    state.rubro = btn.dataset.value;
+    elRubros.querySelectorAll('.calc-chip').forEach(function (b) { b.classList.toggle('active', b === btn); });
+    applyRubroDefaults(state.rubro);
+    resetIfShown();
+  });
+
+  wireChipGroup('calcMensajesGroup', function (v) { state.mensajes = v; });
+  wireChipGroup('calcTiempoGroup', function (v) { state.tiempo = v; });
+  wireChipGroup('calcHorasGroup', function (v) { state.horas = v; });
+  wireChipGroup('calcMarketingGroup', function (v) { state.marketing = v; });
+
+  elSubmit.addEventListener('click', runCalculo);
+
+  setActiveChip('calcRubros', state.rubro);
+  applyRubroDefaults(state.rubro);
+  showIdle();
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reveals = document.querySelectorAll('.reveal');
+  if (reduce || !('IntersectionObserver' in window)) {
+    reveals.forEach(function (el) { el.classList.add('is-visible'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { io.observe(el); });
+  }
+})();
+</script>
+
+</body>
+</html>

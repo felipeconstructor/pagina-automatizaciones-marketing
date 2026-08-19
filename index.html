@@ -297,6 +297,19 @@ body::before {
   opacity: 0.7; pointer-events: none;
 }
 .widget-card > * { position: relative; z-index: 1; }
+.widget-hint {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  color: var(--accent-ink);
+  margin: -22px -22px 18px; padding: 11px 16px;
+  font-size: 0.76rem; font-weight: 800; letter-spacing: 0.02em; text-transform: uppercase;
+  text-align: center; border-radius: 20px 20px 0 0;
+}
+.widget-hint svg { width: 14px; height: 14px; flex-shrink: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .widget-hint { animation: hint-wiggle 2.6s ease-in-out infinite; }
+}
+@keyframes hint-wiggle { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(3px); } }
 .widget-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
 .widget-head-left { display: flex; align-items: center; gap: 12px; }
 .widget-icon { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: var(--accent-ink); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -400,6 +413,7 @@ body::before {
 
 @media (max-width: 640px) {
   .widget-card { padding: 18px; }
+  .widget-hint { margin: -18px -18px 16px; font-size: 0.7rem; padding: 10px 14px; }
   .demo-rubros { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .demo-rubro-btn { width: 100%; padding: 13px 12px; font-size: 0.84rem; }
   .demo-messages { height: 280px; }
@@ -444,6 +458,23 @@ body::before {
 .case-shot .card-badge { top: 14px; left: 14px; }
 .case-link { margin-top: 32px; display: inline-block; }
 @media (max-width: 700px) { .case-shots { grid-template-columns: 1fr; } }
+
+/* ---------- Promo calculadora ---------- */
+.calc-promo { padding: 56px 0; border-top: 1px solid var(--line); }
+.calc-promo-inner {
+  display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(255,178,32,0.09), rgba(255,107,53,0.03));
+  border: 1px solid rgba(255,178,32,0.28); border-radius: 24px; padding: 36px 40px;
+}
+.calc-promo-icon { font-size: 2.4rem; flex-shrink: 0; }
+.calc-promo-text { flex: 1; min-width: 240px; }
+.calc-promo-title { font-family: "Fraunces", Georgia, serif; font-weight: 560; font-variation-settings: "opsz" 72, "WONK" 1; letter-spacing: -0.01em; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.18; margin-top: 8px; }
+.calc-promo-sub { color: var(--muted); margin-top: 10px; font-size: 0.96rem; line-height: 1.55; max-width: 520px; }
+.calc-promo-btn { flex-shrink: 0; }
+@media (max-width: 700px) {
+  .calc-promo-inner { flex-direction: column; align-items: flex-start; padding: 28px 24px; }
+  .calc-promo-btn { width: 100%; text-align: center; }
+}
 
 /* ---------- Problem / Solution ---------- */
 .contrast { padding: 100px 0; border-top: 1px solid var(--line); }
@@ -830,12 +861,13 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
 
     <div class="widget-wrap">
       <div class="widget-card" id="demoCard">
+        <div class="widget-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Prueba aquí cómo quedaría tu agente</div>
         <div class="widget-head">
           <div class="widget-head-left">
             <span class="widget-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></span>
             <div>
               <div class="widget-title">Haz tu agente gratis</div>
-              <div class="widget-sub" id="demoSub">Elige el rubro de tu negocio</div>
+              <div class="widget-sub" id="demoSub">Elige tu rubro y pruébalo tú mismo</div>
             </div>
           </div>
           <span class="widget-live"><span class="dot"></span>En línea</span>
@@ -902,6 +934,20 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     </div>
 
     <a class="ghost-btn case-link" href="https://prolig.cl" target="_blank" rel="noopener">Visitar prolig.cl</a>
+  </div>
+</section>
+
+<section class="calc-promo">
+  <div class="container">
+    <div class="calc-promo-inner reveal">
+      <span class="calc-promo-icon" aria-hidden="true">🧮</span>
+      <div class="calc-promo-text">
+        <span class="eyebrow">Calculadora gratis</span>
+        <h3 class="calc-promo-title">¿Cuánto ganaría <span class="accent">tu</span> negocio con Khrono?</h3>
+        <p class="calc-promo-sub">Cuéntanos tu rubro y en 30 segundos calculamos cuánto tiempo, clientes y plata recuperarías automatizando.</p>
+      </div>
+      <a class="cta-primary calc-promo-btn" href="/calculadora/">Calcular mi ahorro →</a>
+    </div>
   </div>
 </section>
 
