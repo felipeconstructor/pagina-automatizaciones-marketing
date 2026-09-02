@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrusel Zona Urbana — Panel del negocio</title>
+<style>
+  :root{
+    --bg-outer:#0a0a0a;
+    --accent:#dc2b21;
+    --accent-dark:#a81f18;
+    --panel-surface:#ffffff;
+    --panel-surface-alt:#f6f6f6;
+    --ink:#111111;
+    --ink-muted:#6b6b6b;
+    --border:#e4e4e4;
+    --good:#1a7a3c;
+    --warn:#b8860b;
+    --font-head:"Arial Narrow", Arial, sans-serif;
+    --font-body:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#1b1b1b;
+    font-family:var(--font-body);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* fake browser chrome */
+  .browser-chrome{
+    max-width:1180px;
+    margin:24px auto 0;
+    background:#2a2a2a;
+    border-radius:10px 10px 0 0;
+    padding:10px 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .browser-chrome .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.red{background:#ff5f57;} .dot.yellow{background:#febc2e;} .dot.green{background:#28c840;}
+  .browser-chrome .url{
+    margin-left:14px;
+    background:#1a1a1a;
+    color:#9a9a9a;
+    font-size:12.5px;
+    padding:5px 14px;
+    border-radius:6px;
+    font-family:var(--font-body);
+  }
+
+  .checker-strip{
+    max-width:1180px;
+    margin:0 auto;
+    height:14px;
+    background-color:#fff;
+    background-image:
+      linear-gradient(45deg, #111 25%, transparent 25%, transparent 75%, #111 75%, #111),
+      linear-gradient(45deg, #111 25%, transparent 25%, transparent 75%, #111 75%, #111);
+    background-size:18px 18px;
+    background-position:0 0, 9px 9px;
+  }
+
+  .app{
+    max-width:1180px;
+    margin:0 auto 40px;
+    background:var(--panel-surface);
+    border-radius:0 0 10px 10px;
+    overflow:hidden;
+    box-shadow:0 30px 60px rgba(0,0,0,.5);
+  }
+
+  .panel-head{
+    background:linear-gradient(180deg,#111 0%,#0a0a0a 100%);
+    color:#fff;
+    padding:22px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{
+    font-family:var(--font-head);
+    font-weight:800;
+    font-style:italic;
+    letter-spacing:1px;
+    border:2px solid #fff;
+    padding:4px 10px;
+    font-size:15px;
+    transform:skew(-6deg);
+  }
+  .brand-sub{font-size:11px;color:#bbb;letter-spacing:2px;text-transform:uppercase;}
+  .panel-title{
+    font-family:var(--font-head);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    font-size:20px;
+    margin:0;
+  }
+  .period-toggle{display:flex;background:#1c1c1c;border-radius:8px;padding:3px;}
+  .period-toggle button{
+    border:none;background:transparent;color:#aaa;font-family:var(--font-body);
+    font-size:13px;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:600;
+  }
+  .period-toggle button.active{background:var(--accent);color:#fff;}
+
+  /* hero: pedido resuelto solo */
+  .hero{
+    background:#0e0e0e;
+    color:#fff;
+    padding:34px 28px 30px;
+    display:grid;
+    grid-template-columns:260px 1fr;
+    gap:30px;
+    align-items:center;
+  }
+  .hero h2{
+    font-family:var(--font-head);
+    text-transform:uppercase;
+    letter-spacing:1px;
+    font-size:22px;
+    margin:0 0 10px;
+  }
+  .hero h2 span{color:var(--accent);}
+  .hero p{color:#bdbdbd;font-size:14.5px;line-height:1.5;max-width:420px;margin:0 0 6px;}
+  .hero .caption{
+    margin-top:14px;
+    font-size:13.5px;
+    color:#fff;
+    font-weight:700;
+  }
+  .hero .caption em{color:var(--accent);font-style:normal;}
+
+  .phone{
+    background:#000;
+    border:6px solid #222;
+    border-radius:28px;
+    width:250px;
+    margin:0 auto;
+    overflow:hidden;
+    box-shadow:0 20px 40px rgba(0,0,0,.5);
+  }
+  .phone-head{
+    background:#161616;
+    padding:10px 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border-bottom:1px solid #292929;
+  }
+  .phone-head .avatar{
+    width:26px;height:26px;border-radius:50%;
+    background:var(--accent);display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:800;color:#fff;font-family:var(--font-head);
+  }
+  .phone-head .who{font-size:11.5px;color:#fff;font-weight:700;}
+  .phone-head .who small{display:block;color:#5fd16f;font-size:9.5px;font-weight:400;}
+  .phone-body{padding:12px 10px;display:flex;flex-direction:column;gap:7px;min-height:300px;background:#0b0b0b;}
+  .bubble{
+    max-width:82%;
+    padding:7px 10px;
+    border-radius:12px;
+    font-size:11.5px;
+    line-height:1.35;
+  }
+  .bubble.in{align-self:flex-start;background:#232323;color:#eee;border-bottom-left-radius:3px;}
+  .bubble.out{align-self:flex-end;background:var(--accent);color:#fff;border-bottom-right-radius:3px;}
+  .bubble .ts{display:block;font-size:9px;color:#8a8a8a;margin-top:3px;}
+  .bubble.out .ts{color:#ffd9d6;}
+
+  /* tabs */
+  .tabs-nav{
+    display:flex;
+    border-bottom:1px solid var(--border);
+    background:var(--panel-surface-alt);
+    padding:0 20px;
+    overflow-x:auto;
+  }
+  .tabs-nav button{
+    border:none;background:transparent;padding:16px 18px;font-family:var(--font-body);
+    font-size:14px;font-weight:700;color:var(--ink-muted);cursor:pointer;
+    border-bottom:3px solid transparent;white-space:nowrap;
+  }
+  .tabs-nav button.active{color:var(--ink);border-bottom-color:var(--accent);}
+
+  .tab-panel{display:none;padding:26px 28px 36px;}
+  .tab-panel.active{display:block;}
+
+  .pain-line{
+    background:#fff3f2;
+    border-left:4px solid var(--accent);
+    padding:10px 14px;
+    font-size:13.5px;
+    color:#5c1712;
+    border-radius:0 6px 6px 0;
+    margin-bottom:20px;
+  }
+  .pain-line b{color:var(--accent-dark);}
+
+  .tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+  .tile{
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px;
+    background:#fff;
+  }
+  .tile .num{font-family:var(--font-head);font-size:26px;font-weight:800;color:var(--ink);}
+  .tile .label{font-size:12px;color:var(--ink-muted);margin-top:4px;text-transform:uppercase;letter-spacing:.4px;}
+  .tile.alert .num{color:var(--accent);}
+  .tile .chip{display:inline-block;margin-top:6px;font-size:10.5px;padding:2px 7px;border-radius:20px;background:#fdeceb;color:var(--accent-dark);font-weight:700;}
+
+  .chart-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:22px;}
+  .chart-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 16px;border-bottom:1px solid var(--border);background:#fafafa;
+  }
+  .chart-head h3{margin:0;font-family:var(--font-head);text-transform:uppercase;letter-spacing:.5px;font-size:14px;}
+  .toggle-btn{
+    border:1px solid var(--border);background:#fff;font-size:12px;padding:6px 10px;
+    border-radius:6px;cursor:pointer;color:var(--ink-muted);font-weight:600;
+  }
+  .chart-body{padding:20px 20px 8px;}
+  .bars{display:flex;align-items:flex-end;gap:18px;height:150px;}
+  .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .bar{width:100%;max-width:52px;background:var(--accent);border-radius:5px 5px 0 0;position:relative;}
+  .bar .val{position:absolute;top:-20px;left:0;right:0;text-align:center;font-size:11.5px;font-weight:700;}
+  .bar-label{margin-top:8px;font-size:11px;color:var(--ink-muted);text-align:center;}
+
+  table.data-table{width:100%;border-collapse:collapse;color:var(--ink);}
+  .data-table th,.data-table td{padding:9px 16px;text-align:left;font-size:12.5px;border-bottom:1px solid var(--border);}
+  .data-table th{color:var(--ink-muted);text-transform:uppercase;font-size:10.5px;letter-spacing:.4px;background:#fafafa;}
+  .status-ok{color:var(--good);font-weight:700;}
+  .status-warn{color:var(--warn);font-weight:700;}
+  .status-alert{color:var(--accent);font-weight:700;}
+
+  .hidden{display:none !important;}
+
+  .agenda{border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+  .agenda-head{padding:14px 16px;border-bottom:1px solid var(--border);background:#fafafa;}
+  .agenda-head h3{margin:0;font-family:var(--font-head);text-transform:uppercase;letter-spacing:.5px;font-size:14px;}
+  .order-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;font-size:13px;
+  }
+  .order-row:hover{background:#fafafa;}
+  .order-row .when{color:var(--ink-muted);width:110px;font-size:12px;}
+  .order-row .what{flex:1;}
+  .order-detail{
+    display:none;padding:16px;background:#fff8f7;border-bottom:1px solid var(--border);font-size:12.5px;
+  }
+  .order-detail.open{display:block;}
+  .timeline{list-style:none;margin:8px 0 0;padding:0;}
+  .timeline li{padding:6px 0 6px 20px;position:relative;color:#444;}
+  .timeline li::before{content:"";position:absolute;left:0;top:12px;width:8px;height:8px;border-radius:50%;background:var(--accent);}
+
+  .alerts-box{border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:22px;background:#fff8f7;}
+  .alerts-box h3{margin:0 0 10px;font-family:var(--font-head);text-transform:uppercase;font-size:14px;letter-spacing:.5px;color:var(--accent-dark);}
+  .alert-item{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px dashed #f1cfcc;}
+  .alert-item:last-child{border-bottom:none;}
+
+  .footnote{text-align:center;color:#8a8a8a;font-size:11px;padding:14px;}
+
+  /* copiloto */
+  .copilot-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:#fff;}
+  .copilot-head{
+    display:flex;align-items:center;gap:10px;
+    padding:14px 18px;background:#0e0e0e;color:#fff;
+  }
+  .copilot-avatar{
+    width:32px;height:32px;border-radius:8px;background:var(--accent);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-head);font-weight:800;font-size:15px;
+  }
+  .copilot-name{font-weight:700;font-size:14px;}
+  .copilot-status{font-size:11px;color:#6fd17d;}
+  .copilot-log{
+    padding:18px;display:flex;flex-direction:column;gap:10px;
+    min-height:260px;max-height:380px;overflow-y:auto;background:#fafafa;
+  }
+  .copilot-log .bubble{max-width:70%;font-size:13px;padding:9px 13px;}
+  .copilot-log .bubble.in{background:#fff;border:1px solid var(--border);color:var(--ink);}
+  .copilot-log .bubble.out{background:var(--accent);color:#fff;}
+  .copilot-log .bubble .ts{color:#999;}
+  .copilot-log .bubble.out .ts{color:#ffd9d6;}
+  .copilot-log .bubble ul{margin:6px 0 0;padding-left:18px;}
+  .copilot-typing{align-self:flex-start;font-size:12px;color:var(--ink-muted);font-style:italic;padding:2px 4px;}
+  .copilot-chips{
+    display:flex;flex-wrap:wrap;gap:8px;padding:0 18px 14px;border-bottom:1px solid var(--border);
+  }
+  .copilot-chips button{
+    border:1px solid var(--border);background:#fff;color:var(--ink);
+    font-size:12px;padding:7px 12px;border-radius:20px;cursor:pointer;
+  }
+  .copilot-chips button:hover{border-color:var(--accent);color:var(--accent-dark);}
+  .copilot-input-row{display:flex;gap:10px;padding:14px 18px;}
+  .copilot-input-row input{
+    flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13.5px;font-family:var(--font-body);
+  }
+  .copilot-input-row input:focus{outline:none;border-color:var(--accent);}
+  .copilot-input-row button{
+    background:var(--accent);color:#fff;border:none;border-radius:8px;padding:0 20px;font-weight:700;cursor:pointer;font-size:13.5px;
+  }
+  .copilot-input-row button:hover{background:var(--accent-dark);}
+
+  @media (max-width:820px){
+    .tiles{grid-template-columns:repeat(2,1fr);}
+    .hero{grid-template-columns:1fr;}
+    .phone{width:220px;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="browser-chrome">
+    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+    <div class="url">carrusel.cl/panel</div>
+  </div>
+  <div class="checker-strip"></div>
+
+  <div class="app">
+    <div class="panel-head">
+      <div class="brand">
+        <div class="brand-mark">CARRUSEL</div>
+        <div>
+          <div class="brand-sub">Zona Urbana</div>
+          <h1 class="panel-title">Panel del negocio</h1>
+        </div>
+      </div>
+      <div class="period-toggle">
+        <button class="active" data-period="week">Esta semana</button>
+        <button data-period="month">Este mes</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="phone">
+        <div class="phone-head">
+          <div class="avatar">CZ</div>
+          <div class="who">Carrusel Zona Urbana<small>● En línea · Instagram</small></div>
+        </div>
+        <div class="phone-body">
+          <div class="bubble in">Hola! Tienen las Vans Ryland LS en talla 40?<span class="ts">23:47</span></div>
+          <div class="bubble out">¡Hola! Sí, nos quedan 2 pares en talla 40 🔥 ¿te las reservo?<span class="ts">23:47</span></div>
+          <div class="bubble in">Sí porfa, cómo hago el pedido?<span class="ts">23:48</span></div>
+          <div class="bubble out">Pásame tu nombre, dirección y si pagas por transferencia o contra-entrega. Te las reservo 15 min.<span class="ts">23:48</span></div>
+          <div class="bubble in">Fernanda Rojas, Camino Real 245, La Ligua. Transferencia.<span class="ts">23:49</span></div>
+          <div class="bubble out">Pedido #1042 confirmado ✅ Te llega la boleta al correo. ¡Gracias por comprar en Carrusel!<span class="ts">23:49</span></div>
+        </div>
+      </div>
+      <div>
+        <h2>Un pedido resuelto <span>solo</span>, a las 11:49 de la noche</h2>
+        <p>Esto pasó anoche por Instagram. Nadie de Carrusel estaba despierto para responder — el bot ya sabía el stock real, tomó los datos y dejó el pedido listo para despachar.</p>
+        <p>Hoy ese mensaje se hubiera quedado esperando hasta la mañana, compitiendo con el resto de los DMs. Mañana, es un pedido más en tu panel.</p>
+        <div class="caption">Bajá y mirá el pedido <em>#1042</em> en la agenda de hoy →</div>
+      </div>
+    </div>
+
+    <div class="tabs-nav">
+      <button class="active" data-tab="pedidos">📦 Pedidos</button>
+      <button data-tab="finanzas">💰 Finanzas</button>
+      <button data-tab="inventario">🏷️ Inventario</button>
+      <button data-tab="copiloto">🤖 Copiloto</button>
+    </div>
+
+    <!-- PEDIDOS -->
+    <div class="tab-panel active" id="tab-pedidos">
+      <div class="pain-line">Hoy: alguien de Carrusel revisa el WhatsApp/Instagram y el stock físico a mano, uno por uno. <b>Con Khrono, el bot confirma el stock real y arma el pedido solo — de día o de noche.</b></div>
+
+      <div class="tiles" id="tiles-pedidos"></div>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <h3>Pedidos por categoría</h3>
+          <button class="toggle-btn" data-toggle="chart-pedidos">Ver como tabla</button>
+        </div>
+        <div class="chart-body" id="chart-pedidos"></div>
+        <div class="hidden" id="table-pedidos"></div>
+      </div>
+
+      <div class="agenda">
+        <div class="agenda-head"><h3>Agenda de pedidos recientes</h3></div>
+        <div id="agenda-list"></div>
+      </div>
+    </div>
+
+    <!-- FINANZAS -->
+    <div class="tab-panel" id="tab-finanzas">
+      <div class="pain-line">Hoy: nadie sabe cuánto se gana por categoría hasta hacer cuentas a mano a fin de mes. <b>Con Khrono, la ganancia y el margen se ven al segundo, por categoría.</b></div>
+
+      <div class="tiles" id="tiles-finanzas"></div>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <h3>Ingresos por categoría</h3>
+          <button class="toggle-btn" data-toggle="chart-finanzas">Ver como tabla</button>
+        </div>
+        <div class="chart-body" id="chart-finanzas"></div>
+        <div class="hidden" id="table-finanzas"></div>
+      </div>
+    </div>
+
+    <!-- INVENTARIO -->
+    <div class="tab-panel" id="tab-inventario">
+      <div class="pain-line">Hoy: te enterás de que se acabó una talla cuando el cliente reclama. <b>Con Khrono, el panel avisa antes de que se agote.</b></div>
+
+      <div class="tiles">
+        <div class="tile"><div class="num">152</div><div class="label">Unidades en stock</div></div>
+        <div class="tile alert"><div class="num">2</div><div class="label">Categorías en alerta</div><span class="chip">Revisar</span></div>
+        <div class="tile"><div class="num">Vans</div><div class="label">Mayor riesgo de quiebre (~9 días)</div></div>
+        <div class="tile"><div class="num">$8.201.000</div><div class="label">Valor total del inventario</div></div>
+      </div>
+
+      <div class="alerts-box">
+        <h3>Alertas de stock</h3>
+        <div class="alert-item"><span>Vans Ryland LS — talla 40</span><span class="status-alert">2 unidades · ~6 días</span></div>
+        <div class="alert-item"><span>Vans Caldrone — talla 42</span><span class="status-alert">3 unidades · ~9 días</span></div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-head">
+          <h3>Stock por categoría</h3>
+          <button class="toggle-btn" data-toggle="chart-inventario">Ver como tabla</button>
+        </div>
+        <div class="chart-body" id="chart-inventario"></div>
+        <div class="hidden" id="table-inventario"></div>
+      </div>
+    </div>
+
+    <!-- COPILOTO -->
+    <div class="tab-panel" id="tab-copiloto">
+      <div class="pain-line">Hoy: para saber cualquier dato del negocio, alguien tiene que buscarlo a mano o acordarse. <b>Con Khrono, se lo preguntás directo al copiloto y responde al segundo con tu información real.</b></div>
+
+      <div class="copilot-card">
+        <div class="copilot-head">
+          <div class="copilot-avatar">K</div>
+          <div>
+            <div class="copilot-name">Copiloto Khrono</div>
+            <div class="copilot-status">● Conectado a la base de datos de Carrusel</div>
+          </div>
+        </div>
+        <div class="copilot-log" id="copilot-log"></div>
+        <div class="copilot-chips" id="copilot-chips"></div>
+        <div class="copilot-input-row">
+          <input type="text" id="copilot-input" placeholder="Preguntale lo que quieras a tu negocio...">
+          <button id="copilot-send">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footnote">Datos de ejemplo — así se vería con la operación real de Carrusel conectada.</div>
+  </div>
+
+<script>
+const DATA = {
+  week:{
+    pedidos:{total:34, pendientes:5, top:"Zapatillas", aTiempo:"91%"},
+    pedidosCat:[["Zapatillas",15],["Poleras/Hoodies",9],["Pantalones",6],["Accesorios",4]],
+    finanzas:{ingresos:1850000, costos:980000, ganancia:870000, margen:47, ticket:54400},
+    finanzasCat:[
+      {cat:"Zapatillas", ing:820000, costo:430000, gan:390000, margen:48},
+      {cat:"Poleras/Hoodies", ing:510000, costo:270000, gan:240000, margen:47},
+      {cat:"Pantalones", ing:340000, costo:190000, gan:150000, margen:44},
+      {cat:"Accesorios", ing:180000, costo:90000, gan:90000, margen:50}
+    ]
+  },
+  month:{
+    pedidos:{total:142, pendientes:11, top:"Zapatillas", aTiempo:"88%"},
+    pedidosCat:[["Zapatillas",61],["Poleras/Hoodies",38],["Pantalones",27],["Accesorios",16]],
+    finanzas:{ingresos:7420000, costos:3950000, ganancia:3470000, margen:47, ticket:52250},
+    finanzasCat:[
+      {cat:"Zapatillas", ing:3280000, costo:1730000, gan:1550000, margen:47},
+      {cat:"Poleras/Hoodies", ing:2040000, costo:1080000, gan:960000, margen:47},
+      {cat:"Pantalones", ing:1360000, costo:760000, gan:600000, margen:44},
+      {cat:"Accesorios", ing:740000, costo:380000, gan:360000, margen:49}
+    ]
+  }
+};
+
+const INVENTARIO_CAT = [
+  {cat:"Zapatillas", stock:58, ventas:14, dias:29, estado:"Reponer pronto", cls:"status-warn"},
+  {cat:"Poleras/Hoodies", stock:44, ventas:9, dias:34, estado:"Sano", cls:"status-ok"},
+  {cat:"Pantalones", stock:31, ventas:7, dias:31, estado:"Sano", cls:"status-ok"},
+  {cat:"Accesorios", stock:19, ventas:5, dias:27, estado:"Sano", cls:"status-ok"}
+];
+
+const AGENDA = [
+  {when:"Hoy 23:49", id:"#1042", what:"Vans Ryland LS · talla 40", estado:"Despacho pendiente",
+   timeline:["Recibido por DM de Instagram","Bot confirmó stock real","Cliente dio dirección y forma de pago","Pendiente de despacho"]},
+  {when:"Ayer 14:10", id:"#1041", what:"Polera Nike oversize", estado:"Enviado",
+   timeline:["Recibido por DM de Instagram","Bot confirmó stock real","Cliente dio dirección y forma de pago","Despachado"]},
+  {when:"Ayer 10:32", id:"#1040", what:"Jeans Levi's 511", estado:"Enviado",
+   timeline:["Recibido por WhatsApp","Bot confirmó stock real","Cliente dio dirección y forma de pago","Despachado"]},
+  {when:"Lun 18:05", id:"#1039", what:"Zapatillas Vans Old Skool", estado:"Retiro en tienda",
+   timeline:["Recibido por DM de Instagram","Bot confirmó stock real","Cliente eligió retiro en tienda","Listo para retiro"]},
+  {when:"Lun 09:15", id:"#1038", what:"Gorro O'Neill", estado:"Enviado",
+   timeline:["Recibido por WhatsApp","Bot confirmó stock real","Cliente dio dirección y forma de pago","Despachado"]}
+];
+
+function money(n){ return "$" + n.toLocaleString("es-CL"); }
+
+function renderTilesPedidos(p){
+  const d = DATA[p].pedidos;
+  document.getElementById("tiles-pedidos").innerHTML = `
+    <div class="tile"><div class="num">${d.total}</div><div class="label">Pedidos totales</div></div>
+    <div class="tile alert"><div class="num">${d.pendientes}</div><div class="label">Pendientes por confirmar</div></div>
+    <div class="tile"><div class="num">${d.top}</div><div class="label">Categoría más pedida</div></div>
+    <div class="tile"><div class="num">${d.aTiempo}</div><div class="label">Despacho a tiempo</div></div>
+  `;
+}
+
+function renderTilesFinanzas(p){
+  const d = DATA[p].finanzas;
+  document.getElementById("tiles-finanzas").innerHTML = `
+    <div class="tile"><div class="num">${money(d.ingresos)}</div><div class="label">Ingresos</div></div>
+    <div class="tile"><div class="num">${money(d.costos)}</div><div class="label">Costos</div></div>
+    <div class="tile"><div class="num">${money(d.ganancia)}</div><div class="label">Ganancia (${d.margen}%)</div></div>
+    <div class="tile"><div class="num">${money(d.ticket)}</div><div class="label">Ticket promedio</div></div>
+  `;
+}
+
+function renderBars(containerId, entries, formatFn){
+  const fmt = formatFn || (v => v);
+  const max = Math.max(...entries.map(e=>e[1]));
+  document.getElementById(containerId).innerHTML = `<div class="bars">${
+    entries.map(([label,val])=>`
+      <div class="bar-col">
+        <div class="bar" style="height:${Math.max(10,(val/max*100))}%">
+          <span class="val">${fmt(val)}</span>
+        </div>
+        <div class="bar-label">${label}</div>
+      </div>`).join("")
+  }</div>`;
+}
+
+function renderTablePedidos(p){
+  const rows = DATA[p].pedidosCat.map(([cat,val])=>`<tr><td>${cat}</td><td>${val}</td></tr>`).join("");
+  document.getElementById("table-pedidos").innerHTML = `
+    <table class="data-table"><thead><tr><th>Categoría</th><th>Pedidos</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderTableFinanzas(p){
+  const rows = DATA[p].finanzasCat.map(r=>`
+    <tr><td>${r.cat}</td><td>${money(r.ing)}</td><td>${money(r.costo)}</td><td>${money(r.gan)}</td><td>${r.margen}%</td></tr>
+  `).join("");
+  document.getElementById("table-finanzas").innerHTML = `
+    <table class="data-table"><thead><tr><th>Categoría</th><th>Ingresos</th><th>Costos</th><th>Ganancia</th><th>Margen</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderInventario(){
+  renderBars("chart-inventario", INVENTARIO_CAT.map(r=>[r.cat, r.stock]));
+  const rows = INVENTARIO_CAT.map(r=>`
+    <tr><td>${r.cat}</td><td>${r.stock}</td><td>${r.ventas}/sem</td><td>${r.dias} días</td><td class="${r.cls}">${r.estado}</td></tr>
+  `).join("");
+  document.getElementById("table-inventario").innerHTML = `
+    <table class="data-table"><thead><tr><th>Categoría</th><th>Stock</th><th>Ventas/sem</th><th>Días restantes</th><th>Estado</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderAgenda(){
+  document.getElementById("agenda-list").innerHTML = AGENDA.map((o,i)=>`
+    <div class="order-row" data-idx="${i}">
+      <span class="when">${o.when}</span>
+      <span class="what"><b>${o.id}</b> — ${o.what}</span>
+      <span>${o.estado}</span>
+    </div>
+    <div class="order-detail" id="detail-${i}">
+      <b>Historial del pedido ${o.id}</b>
+      <ul class="timeline">${o.timeline.map(t=>`<li>${t}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".order-row").forEach(row=>{
+    row.addEventListener("click", ()=>{
+      const idx = row.getAttribute("data-idx");
+      document.getElementById("detail-"+idx).classList.toggle("open");
+    });
+  });
+}
+
+function renderAll(period){
+  renderTilesPedidos(period);
+  renderTilesFinanzas(period);
+  renderBars("chart-pedidos", DATA[period].pedidosCat);
+  renderTablePedidos(period);
+  renderBars("chart-finanzas", DATA[period].finanzasCat.map(r=>[r.cat, r.ing]), money);
+  renderTableFinanzas(period);
+}
+
+let currentPeriod = "week";
+document.querySelectorAll(".period-toggle button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".period-toggle button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    currentPeriod = btn.getAttribute("data-period");
+    renderAll(currentPeriod);
+  });
+});
+
+document.querySelectorAll(".tabs-nav button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll(".tabs-nav button").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".tab-panel").forEach(p=>p.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("tab-"+btn.getAttribute("data-tab")).classList.add("active");
+  });
+});
+
+document.querySelectorAll(".toggle-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    const id = btn.getAttribute("data-toggle");
+    const chart = document.getElementById(id);
+    const table = document.getElementById("table-"+id.split("-")[1]);
+    const showingTable = !table.classList.contains("hidden");
+    chart.classList.toggle("hidden", !showingTable);
+    table.classList.toggle("hidden", showingTable);
+    btn.textContent = showingTable ? "Ver como tabla" : "Ver como gráfico";
+  });
+});
+
+/* ===================== COPILOTO EMPRESARIAL ===================== */
+
+const PRODUCTS = [
+  {name:"Vans Ryland LS", precio:59990, tallas:{39:4, 40:2, 41:5, 42:0}, keywords:["ryland"]},
+  {name:"Vans Caldrone", precio:64990, tallas:{40:3, 41:3, 42:3, 43:1}, keywords:["caldrone"]},
+  {name:"Vans Old Skool", precio:54990, tallas:{38:6, 39:5, 40:7, 41:4}, keywords:["old skool","oldskool"]},
+  {name:"Polera Nike Oversize", precio:34990, stock:22, keywords:["nike"]},
+  {name:"Jeans Levi's 511", precio:49990, stock:15, keywords:["levi","511"]},
+  {name:"Gorro O'Neill", precio:17990, stock:30, keywords:["oneill","o'neill","gorro"]}
+];
+
+let CALENDAR_EVENTS = [
+  {when:"Vie 10:00", titulo:"Reunión con proveedor Vans (reposición talla 40-41)"},
+  {when:"Lun 16:00", titulo:"Retiro programado — pedido #1039"}
+];
+
+let orderSeq = 1043;
+
+function findProduct(text){
+  // 1) nombre completo del producto mencionado tal cual
+  const exact = PRODUCTS.find(p => text.includes(p.name.toLowerCase()) || text.includes(p.name.toLowerCase().replace(/'/g,"")));
+  if (exact) return exact;
+  // 2) palabra clave específica del modelo (evita confundir por la marca, ej. "Vans")
+  return PRODUCTS.find(p => p.keywords.some(k => text.includes(k)));
+}
+
+function answerCopilot(rawText){
+  const text = rawText.toLowerCase();
+
+  // Listar agenda
+  if (/(qu[eé] tengo agendado|mi agenda|pr[oó]ximos eventos|qu[eé] reuniones)/.test(text)){
+    if (CALENDAR_EVENTS.length===0) return "No tenés nada agendado por ahora.";
+    return "Esto es lo que tenés agendado:<ul>" + CALENDAR_EVENTS.map(e=>`<li><b>${e.when}</b> — ${e.titulo}</li>`).join("") + "</ul>";
+  }
+
+  // Agendar algo nuevo
+  if (/(agenda|agend[aá]|programa|pon)\b.*(reuni[oó]n|cita|proveedor|retiro|visita)/.test(text) || /(reuni[oó]n|cita)\b.*(agenda|para|el )/.test(text)){
+    const diaMatch = text.match(/(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo|hoy|ma[ñn]ana)/);
+    const horaMatch = text.match(/(\d{1,2})[:.]?(\d{2})?\s*(am|pm|hrs|horas)?/);
+    const dia = diaMatch ? diaMatch[1].charAt(0).toUpperCase()+diaMatch[1].slice(1) : "esta semana";
+    const hora = horaMatch ? `${horaMatch[1]}:${horaMatch[2]||"00"}` : "una hora por confirmar";
+    const evento = {when:`${dia} ${hora}`, titulo: rawText.replace(/^(agenda|agend[aá]|programa|pon)\s*/i,"")};
+    CALENDAR_EVENTS.push(evento);
+    return `Listo ✅ Agendé <b>"${evento.titulo}"</b> para <b>${evento.when}</b> en tu calendario.`;
+  }
+
+  // Precio
+  if (/(precio|cu[eé]sta|vale|cu[aá]nto sale)/.test(text)){
+    const p = findProduct(text);
+    if (p) return `El precio de <b>${p.name}</b> es <b>$${p.precio.toLocaleString("es-CL")}</b>.`;
+    return "Decime el nombre exacto del producto (ej. 'Vans Ryland LS') y te paso el precio al toque.";
+  }
+
+  // Stock / disponibilidad
+  if (/(stock|queda|tienen|disponib|talla)/.test(text)){
+    const p = findProduct(text);
+    if (p){
+      const tallaMatch = text.match(/talla\s*(\d{2})/) || text.match(/\b(3[5-9]|4[0-5])\b/);
+      if (p.tallas){
+        if (tallaMatch){
+          const t = tallaMatch[1];
+          const cant = p.tallas[t];
+          if (cant===undefined) return `No tengo esa talla registrada para <b>${p.name}</b>.`;
+          return cant>0
+            ? `Sí, quedan <b>${cant} pares</b> de <b>${p.name}</b> en talla ${t}.`
+            : `<b>${p.name}</b> talla ${t} está <b>agotada</b> — te recomiendo avisarle al cliente y ofrecer otra talla.`;
+        }
+        const total = Object.values(p.tallas).reduce((a,b)=>a+b,0);
+        const detalle = Object.entries(p.tallas).map(([t,c])=>`talla ${t}: ${c}`).join(", ");
+        return `<b>${p.name}</b> tiene ${total} pares en total (${detalle}).`;
+      }
+      return `<b>${p.name}</b> tiene <b>${p.stock} unidades</b> en stock.`;
+    }
+    return `Las categorías con alerta de stock ahora mismo son <b>Vans Ryland LS</b> (talla 40, quedan 2) y <b>Vans Caldrone</b> (talla 42, quedan 3).`;
+  }
+
+  // Preparar pedido
+  if (/(prepara|arma|crea|genera)\b.*pedido/.test(text) || /pedido\b.*(prepara|arma|crea|genera)/.test(text)){
+    const p = findProduct(text);
+    const cantMatch = text.match(/(\d+)\s*(unidad|par|poleras?|jeans|gorros?|zapatillas?)/);
+    const cliMatch = rawText.match(/para\s+([A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(?:\s+[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?)/);
+    const cant = cantMatch ? cantMatch[1] : "1";
+    const nombreProd = p ? p.name : "el producto indicado";
+    const cliente = cliMatch ? cliMatch[1] : "el cliente";
+    const id = "#"+(orderSeq++);
+    return `Pedido <b>${id}</b> creado: <b>${cant} × ${nombreProd}</b> para <b>${cliente}</b> — queda <b>pendiente de confirmar dirección y forma de pago</b> con el cliente.`;
+  }
+
+  // Resumen de finanzas
+  if (/(finanza|ingreso|ganancia|margen|cu[aá]nto vend[ií]|resumen)/.test(text)){
+    const d = DATA[currentPeriod].finanzas;
+    const periodoLabel = currentPeriod==="week" ? "esta semana" : "este mes";
+    return `Resumen de ${periodoLabel}: ingresos <b>${money(d.ingresos)}</b>, costos <b>${money(d.costos)}</b>, ganancia <b>${money(d.ganancia)}</b> (margen ${d.margen}%), ticket promedio <b>${money(d.ticket)}</b>.`;
+  }
+
+  // Saludo genérico
+  if (/^(hola|buenas|buenos d[ií]as|buenas tardes)/.test(text)){
+    return "¡Hola Paul! Preguntame por stock, precios, pedidos, tu agenda o un resumen de finanzas — lo que necesites.";
+  }
+
+  return "Puedo ayudarte con stock y precios de productos, preparar pedidos, tu agenda, o un resumen de finanzas. Probá con algo como '¿cuánto stock queda de Vans Ryland LS talla 40?'";
+}
+
+const COPILOT_CHIPS = [
+  "¿Cuánto stock queda de Vans Ryland LS talla 40?",
+  "¿Cuál es el precio de las Vans Caldrone?",
+  "Agenda una reunión con el proveedor el viernes a las 11:00",
+  "¿Qué tengo agendado esta semana?",
+  "Prepara un pedido de 2 Polera Nike Oversize para Camila Soto",
+  "Dame un resumen de las finanzas de esta semana"
+];
+
+function appendBubble(text, cls){
+  const log = document.getElementById("copilot-log");
+  const now = new Date();
+  const ts = now.getHours().toString().padStart(2,"0")+":"+now.getMinutes().toString().padStart(2,"0");
+  const div = document.createElement("div");
+  div.className = "bubble "+cls;
+  div.innerHTML = text + `<span class="ts"> · ${ts}</span>`;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function handleCopilotSend(text){
+  if (!text.trim()) return;
+  appendBubble(text, "out");
+  document.getElementById("copilot-input").value = "";
+
+  const log = document.getElementById("copilot-log");
+  const typing = document.createElement("div");
+  typing.className = "copilot-typing";
+  typing.textContent = "El copiloto está escribiendo...";
+  log.appendChild(typing);
+  log.scrollTop = log.scrollHeight;
+
+  setTimeout(()=>{
+    typing.remove();
+    appendBubble(answerCopilot(text), "in");
+  }, 650 + Math.random()*500);
+}
+
+function renderCopilot(){
+  appendBubble("Hola Paul 👋 Soy tu copiloto de Carrusel. Puedo revisar stock, precios, armar pedidos, agendar cosas en tu calendario o darte un resumen de finanzas. ¿Qué necesitás?", "in");
+
+  document.getElementById("copilot-chips").innerHTML = COPILOT_CHIPS.map(q=>
+    `<button type="button">${q}</button>`
+  ).join("");
+  document.querySelectorAll("#copilot-chips button").forEach(btn=>{
+    btn.addEventListener("click", ()=> handleCopilotSend(btn.textContent));
+  });
+
+  document.getElementById("copilot-send").addEventListener("click", ()=>{
+    handleCopilotSend(document.getElementById("copilot-input").value);
+  });
+  document.getElementById("copilot-input").addEventListener("keydown", (e)=>{
+    if (e.key==="Enter") handleCopilotSend(e.target.value);
+  });
+}
+
+renderAll("week");
+renderInventario();
+renderAgenda();
+renderCopilot();
+</script>
+</body>
+</html>
