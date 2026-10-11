@@ -1247,3 +1247,30 @@ en la raíz del dominio (`CNAME` = `khrono.cl`) tanto en local
 - Código y comentarios en español
 - Sin build ni dependencias — es un solo archivo HTML autocontenido
 - Cambios se commitean y pushean directo a `main` (sin staging)
+
+## Rediseño "tech premium" (11 oct 2026) — VERSIÓN OFICIAL
+
+Rodolfo pidió una página más profesional y de ticket alto. Tras 3 direcciones
+descartadas (sobria clara, noche con reloj, "relojería" serif oscura) eligió
+**tech premium** (referencia Stripe/Linear/Apple). Reemplaza TODO lo anterior
+de `index.html` (el hero con foto, el demo de IA "Haz tu agente gratis", las
+tarjetas de 6 servicios, el banner de calculadora y el botón flotante de
+WhatsApp ya NO existen en la home).
+
+- Fondo claro, tipografía **Geist** (Google Fonts), tinta `#0B1B20`, marca
+  `#0E4A56`/`#13606F`, brillo turquesa `#7FE0D8` (solo en logo, halo del
+  teléfono y bloque de cierre).
+- Hero: "Tu negocio responde aunque tú no estés." + iPhone en CSS con
+  conversación que se escribe sola (JS `DEMOS`), selector Corredora/Clínica.
+- Enfoque en 2 rubros (corredoras y clínicas estéticas) con paneles del
+  sistema dibujados en HTML (datos ilustrativos); demás servicios en una línea.
+- Casos: Prolig (90% / 2 sueldos) y Power Gym (`assets/case-powergym.jpg`,
+  captura de gympower.cl), más "sistemas listos" (clínica y automotora, sin
+  decir que son clientes).
+- Agenda: modal propio de 2 campos (nombre + WhatsApp) → mismo webhook de
+  leads (payload compatible, campos inversion/problema/urgencia vacíos) +
+  `fbq Lead/Schedule` → abre Google Calendar. WhatsApp dispara `fbq Contact`.
+  Pixel y tracking de visitas sin cambios.
+- Favicon nuevo (cuadro oscuro con punto turquesa).
+- Pendientes: `og-image.jpg` sigue siendo la foto oscura vieja; `/calculadora/`
+  conserva el diseño antiguo y enlaza a `/#servicios` (ancla que ya no existe).
