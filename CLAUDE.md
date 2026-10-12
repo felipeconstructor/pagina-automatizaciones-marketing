@@ -1272,5 +1272,28 @@ WhatsApp ya NO existen en la home).
   `fbq Lead/Schedule` → abre Google Calendar. WhatsApp dispara `fbq Contact`.
   Pixel y tracking de visitas sin cambios.
 - Favicon nuevo (cuadro oscuro con punto turquesa).
-- Pendientes: `og-image.jpg` sigue siendo la foto oscura vieja; `/calculadora/`
-  conserva el diseño antiguo y enlaza a `/#servicios` (ancla que ya no existe).
+- `og-image.jpg` (12 oct): nueva, estilo tech premium (titular + iPhone con el
+  chat de la corredora), 1200×630, generada con Chrome headless desde un HTML.
+- `/calculadora/` ELIMINADA (12 oct, decisión de Rodolfo): ahora es solo una
+  redirección a `/` con `noindex`, para que los links viejos no den 404.
+- **Reloj de fondo por sección (12 oct):** Rodolfo pidió recuperar el reloj de
+  la versión "noche" descartada, pero solo en grises/blanco/negro y como
+  mosaico de fondo. Cada sección con `class="has-clock"` +
+  `data-clock="HH:MM"` + `data-clock-pos="c-hero|c-left|c-right|c-small|c-closing"`
+  (y `data-clock-dark` en el bloque oscuro) recibe un SVG `.bg-clock` generado
+  por JS al final del `<body>`. Lados alternados; horas que recorren el día
+  (hero 23:14 = hora del chat, rubros 02:40, casos 09:05, proceso 13:30,
+  equipo 18:50, cierre 10:00). Solo el segundero se mueve (60 s, respeta
+  `prefers-reduced-motion`). Opacidades muy bajas a propósito: si se ve
+  "sucio", bajar las de `.bg-clock .hand`.
+
+- **Arreglo móvil (12 oct):** Rodolfo grabó la web en su iPhone y se veía mal.
+  En `@media (max-width: 560px)`: menos padding de secciones, h1 40px, teléfono
+  272px más bajo, sin el bloque decorativo `.panel-wrap::before`, cabecera de
+  panel apilada, pills en la misma fila (más chicas) y se oculta la 2.ª fila de
+  cada panel (la "Confirmada" repetida), capturas de casos recortadas 4:3,
+  pasos de "Cómo trabajamos" en formato compacto y fotos del equipo 4:3. El
+  chat del teléfono tiene un fundido arriba (mask) para que los mensajes que se
+  cortan no se vean como error (también en PC). Para revisar a 390px sin
+  dispositivo: Chrome headless no baja de ~500px → usar un HTML con un
+  `<iframe>` de 390px de ancho y capturar eso.

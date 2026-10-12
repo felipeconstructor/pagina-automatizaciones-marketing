@@ -107,6 +107,7 @@ button { font: inherit; }
 .chat-top div span { font-size: 12px; color: var(--ok); }
 .chat-time { margin: 14px auto 4px; font-size: 11.5px; color: var(--slate); background: #fff; padding: 3px 10px; border-radius: 999px; }
 .thread { flex: 1; padding: 6px 12px 16px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; justify-content: flex-end; }
+.thread { -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 36px); mask-image: linear-gradient(to bottom, transparent 0, #000 36px); }
 .bubble { max-width: 82%; padding: 8px 11px 6px; border-radius: 16px; font-size: 13.5px; line-height: 1.4; box-shadow: 0 1px 1px rgba(11,27,32,.06); animation: pop .28s ease both; }
 .bubble small { display: block; text-align: right; font-size: 10.5px; margin-top: 2px; opacity: .65; }
 .bubble.in { align-self: flex-start; background: #fff; border-bottom-left-radius: 5px; }
@@ -123,6 +124,38 @@ button { font: inherit; }
 .stage-note { position: relative; z-index: 1; margin-top: 18px; font-size: 14px; color: var(--slate); }
 
 /* ── Franja de confianza ───────────────────────────────── */
+/* Reloj de fondo por sección (solo grises) */
+.has-clock { position: relative; overflow: hidden; }
+.has-clock > .wrap { position: relative; z-index: 1; }
+.bg-clock { position: absolute; z-index: 0; aspect-ratio: 1; pointer-events: none; }
+.bg-clock .face { fill: none; stroke: rgba(11,27,32,.07); stroke-width: 1; }
+.bg-clock .tick { stroke: rgba(11,27,32,.08); stroke-width: 1.2; }
+.bg-clock .tick.major { stroke: rgba(11,27,32,.13); stroke-width: 2.4; }
+.bg-clock .hand { stroke: rgba(11,27,32,.10); stroke-linecap: round; }
+.bg-clock .hand-h { stroke-width: 5; }
+.bg-clock .hand-m { stroke-width: 3; }
+.bg-clock .hand-s { stroke: rgba(11,27,32,.14); stroke-width: 1.2; transform-box: view-box; transform-origin: 200px 200px; }
+.bg-clock .pin { fill: rgba(11,27,32,.16); }
+.bg-clock.on-dark .face { stroke: rgba(255,255,255,.08); }
+.bg-clock.on-dark .tick { stroke: rgba(255,255,255,.10); }
+.bg-clock.on-dark .tick.major { stroke: rgba(255,255,255,.20); }
+.bg-clock.on-dark .hand { stroke: rgba(255,255,255,.22); }
+.bg-clock.on-dark .hand-s { stroke: rgba(255,255,255,.30); }
+.bg-clock.on-dark .pin { fill: rgba(255,255,255,.30); }
+.bg-clock.c-hero { width: 900px; right: -120px; top: 50%; transform: translateY(-50%); }
+.bg-clock.c-left { width: 760px; left: -380px; top: 80px; }
+.bg-clock.c-right { width: 760px; right: -380px; top: 80px; }
+.bg-clock.c-small { width: 520px; right: -200px; top: -60px; }
+.bg-clock.c-closing { width: 620px; right: -200px; top: 50%; transform: translateY(-50%); }
+@media (max-width: 860px) {
+  .bg-clock.c-hero { width: 640px; right: -320px; top: 34%; }
+  .bg-clock.c-left, .bg-clock.c-right { width: 520px; }
+  .bg-clock.c-left { left: -300px; } .bg-clock.c-right { right: -300px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bg-clock .hand-s { animation: tic 60s linear infinite; }
+  @keyframes tic { to { transform: rotate(360deg); } }
+}
 .trust { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-soft); }
 .trust-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 40px; padding-top: 26px; padding-bottom: 26px; }
 .trust p { font-size: 15px; color: var(--slate); }
@@ -215,6 +248,7 @@ button { font: inherit; }
 .closing-card { position: relative; overflow: hidden; border-radius: 32px; background: var(--ink); color: #fff; padding: clamp(48px, 7vw, 96px) clamp(28px, 6vw, 88px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px 56px; align-items: end; }
 .closing-card::before { content: ""; position: absolute; width: 640px; height: 640px; right: -180px; top: -260px; background: radial-gradient(closest-side, rgba(127,224,216,.35), rgba(19,96,111,.25) 50%, transparent 75%); }
 .closing-card > * { position: relative; }
+.closing-card > .bg-clock { position: absolute; }
 .closing-card h2 { max-width: 12ch; }
 .closing-card p { color: #B4C4C7; font-size: 18px; }
 .closing-actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 12px; }
@@ -262,6 +296,38 @@ button { font: inherit; }
   .rows .pill { grid-column: 2; justify-self: start; }
   .also, .built { padding: 24px; }
   .modal-card { padding: 30px 22px 24px; }
+
+  /* Móvil (12 oct): menos aire, hero más compacto, paneles más cortos */
+  .section { padding-top: 64px; padding-bottom: 64px; }
+  .section-head { margin-bottom: 32px; }
+  .section-head p, .sector-pain { font-size: 17px; }
+  .h-xl { font-size: 40px; }
+  .hero-grid { padding-top: 36px; padding-bottom: 48px; gap: 36px; }
+  .hero-lead { margin-top: 16px; font-size: 17px; }
+  .hero-actions { margin-top: 24px; }
+  .hero-proof { margin-top: 24px; gap: 6px 18px; font-size: 14px; }
+  .switch { margin-bottom: 16px; }
+  .phone { width: 272px; aspect-ratio: 320 / 600; }
+  .bubble { font-size: 13px; }
+  .stage-note { margin-top: 12px; font-size: 13px; }
+  .sector { gap: 28px; }
+  .sector + .sector { margin-top: 64px; }
+  .panel-wrap::before { display: none; }
+  .panel-top { flex-direction: column; align-items: flex-start; gap: 2px; padding: 14px 16px; }
+  .panel-top span { font-size: 12.5px; }
+  .rows li { grid-template-columns: 46px 1fr auto; gap: 10px; padding: 12px 14px; font-size: 14px; }
+  .rows .pill { grid-column: auto; justify-self: end; font-size: 11.5px; padding: 3px 8px; }
+  .rows li:nth-child(2) { display: none; }
+  .case { gap: 24px; }
+  .case + .case { margin-top: 56px; }
+  .browser img { aspect-ratio: 4 / 3; object-fit: cover; object-position: center top; }
+  .steps { gap: 10px; }
+  .step { display: grid; grid-template-columns: 32px 1fr; column-gap: 14px; padding: 18px; border-radius: 16px; }
+  .step h3 { margin-top: 4px; font-size: 18px; }
+  .step p { grid-column: 2; margin-top: 4px; font-size: 15px; }
+  .person img { aspect-ratio: 4 / 3; }
+  .person-body { padding: 20px 20px 22px; }
+  .person-body p:last-child { font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .bubble, .typing { animation: none; }
@@ -310,7 +376,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
 </header>
 
 <main>
-  <section class="hero">
+  <section class="hero has-clock" data-clock="23:14" data-clock-pos="c-hero">
     <div class="wrap hero-grid">
       <div>
         <h1 class="h-xl">Tu negocio responde aunque tú no estés.</h1>
@@ -348,7 +414,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     </div>
   </div>
 
-  <section class="section" id="rubros">
+  <section class="section has-clock" id="rubros" data-clock="02:40" data-clock-pos="c-left">
     <div class="wrap">
       <div class="section-head">
         <h2 class="h-lg">Especialistas en dos rubros</h2>
@@ -422,7 +488,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <section class="section cases" id="casos">
+  <section class="section cases has-clock" id="casos" data-clock="09:05" data-clock-pos="c-right">
     <div class="wrap">
       <div class="section-head">
         <h2 class="h-lg">Funcionando en negocios reales</h2>
@@ -472,7 +538,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <section class="section" id="proceso">
+  <section class="section has-clock" id="proceso" data-clock="13:30" data-clock-pos="c-left">
     <div class="wrap">
       <div class="section-head">
         <h2 class="h-lg">Cómo trabajamos</h2>
@@ -487,7 +553,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <section class="section" id="equipo" style="padding-top:0">
+  <section class="section has-clock" id="equipo" style="padding-top:0" data-clock="18:50" data-clock-pos="c-small">
     <div class="wrap">
       <div class="section-head">
         <h2 class="h-lg">Quiénes están detrás</h2>
@@ -516,7 +582,7 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
 
   <section class="closing" id="agendar">
     <div class="wrap">
-      <div class="closing-card">
+      <div class="closing-card" data-clock="10:00" data-clock-pos="c-closing" data-clock-dark>
         <div>
           <p class="closing-note">Trabajamos con pocos clientes a la vez</p>
           <h2 class="h-lg">Conversemos sobre tu negocio</h2>
@@ -718,6 +784,33 @@ src="https://www.facebook.com/tr?id=1046895985015967&ev=PageView&noscript=1"
     document.getElementById('agendaFallback').href = calendarUrl;
     form.hidden = true;
     done.hidden = false;
+  });
+})();
+</script>
+<script>
+/* Reloj de fondo: dibuja un reloj gris en cada elemento con data-clock="HH:MM" */
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); return e; }
+  function hand(cls, deg, len, tail) {
+    var a = deg * Math.PI / 180;
+    return el('line', { 'class': 'hand ' + cls, x1: 200 - Math.sin(a) * tail, y1: 200 + Math.cos(a) * tail, x2: 200 + Math.sin(a) * len, y2: 200 - Math.cos(a) * len });
+  }
+  document.querySelectorAll('[data-clock]').forEach(function (host, i) {
+    var t = host.getAttribute('data-clock').split(':'), h = +t[0] % 12, m = +t[1];
+    var svg = el('svg', { 'class': 'bg-clock ' + host.getAttribute('data-clock-pos') + (host.hasAttribute('data-clock-dark') ? ' on-dark' : ''), viewBox: '0 0 400 400', 'aria-hidden': 'true' });
+    svg.appendChild(el('circle', { 'class': 'face', cx: 200, cy: 200, r: 198 }));
+    for (var k = 0; k < 60; k++) {
+      var major = k % 5 === 0, a = k * 6 * Math.PI / 180, r1 = major ? 166 : 178;
+      svg.appendChild(el('line', { 'class': major ? 'tick major' : 'tick', x1: 200 + Math.sin(a) * r1, y1: 200 - Math.cos(a) * r1, x2: 200 + Math.sin(a) * 190, y2: 200 - Math.cos(a) * 190 }));
+    }
+    svg.appendChild(hand('hand-h', h * 30 + m * 0.5, 104, 14));
+    svg.appendChild(hand('hand-m', m * 6, 160, 20));
+    var s = hand('hand-s', 0, 174, 32);
+    s.style.animationDelay = (-i * 11) + 's';
+    svg.appendChild(s);
+    svg.appendChild(el('circle', { 'class': 'pin', cx: 200, cy: 200, r: 5 }));
+    host.insertBefore(svg, host.firstChild);
   });
 })();
 </script>
